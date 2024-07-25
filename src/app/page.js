@@ -1,95 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import {Grid} from "@/components/Grid";
+import s from "@/styles/globals.module.css"
+import Cookies from "js-cookie";
+import {useRouter} from "next/navigation";
+import {useEffect} from "react";
+import UserStore from "@/stores/UserStore";
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+export default function Page() {
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+	const router = useRouter();
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+	const {
+		setUserId,
+		setUserEmail,
+		setUserPass,
+		setUserName,
+		setUserPhone,
+		setUserPFP
+	} = UserStore()
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+	useEffect(() => {
+		const fetchUser = async () => {
+			const storageUserID = Cookies.get("storageUserID") || ""
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
-}
+			if (storageUserID === "") {
+
+				router.push("/auth/login")
+
+			} else {
+				const request = {
+					_id: storageUserID,
+				}
+				try {
+					const response = await fetch(`/api/post/auth/fetch`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(request),
+					})
+
+					const data = await response.json()
+
+					setUserId(data.result._id)
+					setUserEmail(data.result.email)
+					setUserPass(data.result.pass)
+					setUserName(data.result.name)
+					setUserPhone(data.result.phone)
+					setUserPFP(data.result.pfp)
+
+				} catch (e) {
+					console.log(e)
+				}
+			}
+		}
+		fetchUser()
+	}, []);
+
+	return (
+		<>
+			<div className={s.wrapper}>
+				<Grid url={`https://api.pexels.com/v1/curated?per_page=30`}/>
+			</div>
+		</>
+	);
+};

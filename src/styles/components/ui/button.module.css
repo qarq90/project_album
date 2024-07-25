@@ -1,0 +1,25 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 16px);
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 16px 8px 8px 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary-theme-color);
+    color: var(--primary-dark-color);
+    box-shadow: 6px 6px 12px var(--primary-dark-color);
+    outline: none;
+    transition: 0.25s all ease-in-out;
+}
+
+.button svg {
+    margin-right: 8px;
+}
+
+.button:hover {
+    scale: 0.95;
+}

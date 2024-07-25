@@ -1,0 +1,42 @@
+
+.profile {
+    width: 100vw;
+}
+
+.pfpContainer {
+    text-align: center;
+}
+
+.pfp {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+.editContainer {
+    display: flex;
+    width: 100%;
+}
+
+.editContainer > div {
+    width: 40vw;
+}
+
+.edit {
+    display: flex;
+    justify-content: center;
+    width: 10vw;
+}
+
+.edit > button {
+    width: 35%;
+}
+
+.editComponent {
+    width: 50vw;
+    position: fixed;
+    top: 10%;
+    left: 15%;
+    padding: 0.25rem 10rem;
+}
