@@ -36,7 +36,7 @@
 
 .editComponent {
     border-radius: 8px;
-    background-color: var(--primary-dark-color);
+    background-color: var(--secondary-dark-color);
     width: 50vw;
     position: fixed;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
