@@ -1,17 +1,19 @@
-"use client"
+"use client";
 
 import {useEffect, useState} from "react";
-import s from "@/styles/home/home.module.css";
-import Link from "next/link";
 import {Button} from "@/components/ui/Button";
+import {Skeleton} from "@/components/Skeleton";
+import Link from "next/link";
+import s from "@/styles/home/home.module.css";
 
-export const Grid = (props) => {
+export const ImageGrid = (props) => {
 	const [images, setImages] = useState([]);
-	const [page, setPage] = useState(2);
+	const [page, setPage] = useState(1);
+	const [loading, setLoading] = useState(true);
 
 	const fetchImages = async () => {
 		const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
-		const url = props.url;
+		const url = `${props.url}&page=${page}`;
 
 		const options = {
 			method: 'GET',
@@ -23,7 +25,12 @@ export const Grid = (props) => {
 		try {
 			const response = await fetch(url, options);
 			const data = await response.json();
+			console.log(data);
 			setImages(data.photos);
+
+			setTimeout(() => {
+				setLoading(false);
+			}, 2000);
 		} catch (error) {
 			console.error('Error fetching the images:', error);
 		}
@@ -42,12 +49,11 @@ export const Grid = (props) => {
 	};
 
 	const loadMore = async () => {
-		setPage(page + 2)
+		const newPage = page + 1;
+		setPage(newPage);
 
 		const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
-		const url = props.url + "&page=" + page;
-
-		console.log(url)
+		const url = `${props.url}&page=${newPage}`;
 
 		const options = {
 			method: 'GET',
@@ -63,33 +69,31 @@ export const Grid = (props) => {
 		} catch (error) {
 			console.error('Error fetching the images:', error);
 		}
-	}
+	};
 
 	return (
 		<>
-			<div>
-				<div className={s.grid}>
-					{images.length > 0 ? (
-						images.map((image, index) => {
-							const cellType = getCellType(image.width, image.height);
-							return (
-								<div key={index} className={`${s.cell} ${s[cellType]}`}>
-									<Link href={`/image/${image.id}`}>
-										<img
-											className={s.img}
-											src={image.src.original}
-											alt={`Image ${index + 1}`}
-										/>
-									</Link>
-								</div>
-							);
-						})
-					) : (
-						<p>Loading...</p>
-					)}
+			{loading ? (
+				<Skeleton/>
+			) : (
+				<div className={s.imgGrid}>
+					{images.map((image, index) => {
+						const cellType = getCellType(image.width, image.height);
+						return (
+							<div key={index} className={`${s.cell} ${s[cellType]}`}>
+								<Link className={s.imgCell} href={`/image/${image.id}`}>
+									<img
+										className={s.img}
+										src={image.src.original}
+										alt={image.alt}
+									/>
+								</Link>
+							</div>
+						);
+					})}
 				</div>
-			</div>
+			)}
 			<Button onClick={loadMore} text="Load More"/>
 		</>
-	)
-}
+	);
+};

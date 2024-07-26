@@ -4,6 +4,14 @@ export const NavLeft = [
 		href: "/"
 	},
 	{
+		text: 'Images',
+		href: "/images"
+	},
+	{
+		text: 'Videos',
+		href: "/videos"
+	},
+	{
 		text: 'Albums',
 		href: "/albums"
 	},

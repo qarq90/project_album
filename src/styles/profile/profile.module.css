@@ -5,6 +5,7 @@
 
 .pfpContainer {
     text-align: center;
+    padding: 3rem;
 }
 
 .pfp {
@@ -34,9 +35,16 @@
 }
 
 .editComponent {
+    border-radius: 8px;
+    background-color: var(--primary-dark-color);
     width: 50vw;
     position: fixed;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     top: 10%;
     left: 15%;
-    padding: 0.25rem 10rem;
+    padding: 2rem 10rem;
+}
+
+.editComponent span {
+    color: var(--primary-light-color);
 }

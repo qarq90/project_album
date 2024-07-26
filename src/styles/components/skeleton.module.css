@@ -1,0 +1,95 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 12px;
+    position: relative;
+}
+
+.container > div {
+    position: relative;
+    background-color: var(--primary-theme-color);
+}
+
+.a {
+    height: 300px;
+    grid-column: span 2;
+    grid-row: span 3;
+}
+
+.b {
+    height: 100px;
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.c {
+    grid-column: span 2;
+    grid-row: span 3;
+}
+
+.d {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+.e {
+    grid-column: span 3;
+    grid-row: span 2;
+}
+
+.f {
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.g {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+.h {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.i {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+.j {
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+.k {
+    grid-column: span 2;
+    grid-row: span 5;
+}
+
+.l {
+    grid-column: span 2;
+    grid-row: span 2;
+    height: 200px;
+}
+
+.container > div::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}

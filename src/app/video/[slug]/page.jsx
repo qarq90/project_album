@@ -8,13 +8,13 @@ import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
 
 export default function Page({params}) {
 	const slug = params.slug;
-	const [image, setImage] = useState(null);
+	const [video, setVideo] = useState(null);
 	const [resolution, setResolution] = useState("Original");
 
 	useEffect(() => {
-		const fetchImages = async () => {
+		const fetchVideo = async () => {
 			const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
-			const url = `https://api.pexels.com/v1/photos/${slug}`;
+			const url = `https://api.pexels.com/videos/videos/${slug}`;
 
 			const options = {
 				method: 'GET',
@@ -26,34 +26,29 @@ export default function Page({params}) {
 			try {
 				const response = await fetch(url, options);
 				const data = await response.json();
-				setImage(data);
+				console.log(data)
+				setVideo(data);
 			} catch (error) {
-				console.error('Error fetching the images:', error);
+				console.error('Error fetching the video:', error);
 			}
 		};
 
-		fetchImages();
-	}, []);
+		fetchVideo();
+	}, [slug]);
 
-	const resolutionUrls = {
-		Landscape: image?.src.landscape,
-		Large: image?.src.large,
-		'2X Large': image?.src['2x_large'],
-		Medium: image?.src.medium,
-		Original: image?.src.original,
-		Portrait: image?.src.portrait,
-		Small: image?.src.small,
-		Tiny: image?.src.tiny,
-	};
+	const resolutionUrls = video?.video_files.reduce((acc, file) => {
+		acc[file.quality] = file.link;
+		return acc;
+	}, {});
 
 	function downloadHandler() {
-		if (image && resolutionUrls[resolution]) {
-			let name = image.url ? image.url.split('/').pop() : 'download.png';
+		if (video && resolutionUrls[resolution]) {
+			let name = video.url ? video.url.split('/').pop() : 'download.mp4';
 			name = removeNumbersAndTrailingChars(name);
 
 			handleDownload(resolutionUrls[resolution], name);
 		} else {
-			console.log('No image available or resolution is not set.');
+			console.log('No video available or resolution is not set.');
 		}
 	}
 
@@ -68,43 +63,41 @@ export default function Page({params}) {
 
 	async function albumHandler() {
 		try {
-			const response = await fetch(image.src.original);
+			const response = await fetch(video.video_files[1].link);
 			const blob = await response.blob();
 			const base64 = await blobToBase64(blob);
-			console.log(base64)
+			console.log(base64);
 			return base64;
 		} catch (error) {
-			console.error('Error converting image URL to base64:', error);
+			console.error('Error converting video URL to base64:', error);
 		}
 	}
 
 	return (
 		<div className={g.wrapper}>
-			{image ? (
+			{video ? (
 				<>
-					<img
-						className={s.image}
-						src={image.src.original}
-						alt={image.alt || slug}
-						width={image.width}
-						height={image.height}
+					<video
+						className={s.video}
+						src={video.video_files[1].link}
+						controls
+						poster={video.image}
+						width={video.width}
+						height={video.height}
 						style={{objectFit: 'cover'}}
 					/>
-					<h2 className={s.name}>Photographer: {image.photographer}</h2>
+					<h2 className={s.name}>Videographer: {video.user.name}</h2>
 					<div className={s.bottomContainer}>
 						<select
 							className={s.select}
 							value={resolution}
 							onChange={(e) => setResolution(e.target.value)}
 						>
-							<option value="Landscape">Landscape</option>
-							<option value="Large">Large</option>
-							<option value="2X Large">2X Large</option>
-							<option value="Medium">Medium</option>
-							<option value="Original">Original</option>
-							<option value="Portrait">Portrait</option>
-							<option value="Small">Small</option>
-							<option value="Tiny">Tiny</option>
+							{Object.keys(resolutionUrls).map((quality) => (
+								<option key={quality} value={quality}>
+									{quality.toUpperCase()}
+								</option>
+							))}
 						</select>
 						<Button text="Download" onClick={downloadHandler}/>
 						{/*<Button text="Add to Album" onClick={albumHandler}/>*/}

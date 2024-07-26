@@ -1,7 +1,10 @@
 :root {
     --primary-theme-color: #a67b5b;
-    --primary-dark-color: #1e1e1e;
-    --primary-light-color: #ccc;
+    --primary-dark-color: #1f1f1f;
+    --secondary-dark-color: #2d2d2d;
+    --primary-light-color: #cccccc;
+
+    --box-shadow-color: rgba(10, 10, 10, 1);
 }
 
 * {
@@ -11,9 +14,29 @@
 
 body {
     overflow-x: hidden;
-    background-color: var(--primary-light-color);
+    background-color: var(--secondary-dark-color);
 }
 
 a {
     text-decoration: none;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--primary-theme-color);
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--primary-light-color);
+}
+
+* {
+    scrollbar-width: thin;
+}
+
+* {
+    scrollbar-color: var(--primary-theme-color) var(--primary-light-color);
 }

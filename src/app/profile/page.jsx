@@ -7,6 +7,7 @@ import {useState} from "react";
 import {Edit} from "@/components/Edit";
 import Cookies from "js-cookie";
 import {useRouter} from "next/navigation";
+import {AnimatePresence} from "framer-motion";
 
 export default function Page() {
 
@@ -26,7 +27,13 @@ export default function Page() {
 		userPass,
 		userName,
 		userPhone,
-		userPFP
+		userPFP,
+		setUserId,
+		setUserEmail,
+		setUserPass,
+		setUserName,
+		setUserPhone,
+		setUserPFP
 	} = UserStore()
 
 	const pfp = userPFP
@@ -37,9 +44,19 @@ export default function Page() {
 		setEditing(!editing)
 	}
 
+	function logoutHandler() {
+		router.push("/auth/login")
+		setUserId("")
+		setUserEmail("")
+		setUserPass("")
+		setUserName("")
+		setUserPhone("")
+		setUserPFP("")
+	}
+
 	return (
 		<>
-			<div className={p.profile}>
+			<div className={p.profile + " " + (editing ? p.passive : "")}>
 				<div className={p.pfpContainer}>
 					<img className={p.pfp} src={pfp} alt=""/>
 					<h1>{userName}</h1>
@@ -49,14 +66,15 @@ export default function Page() {
 					</div>
 					<div className={p.edit}>
 						<Button text={editing ? "Cancel" : "Edit"} onClick={editHandler}/>
+						<Button text="Log Out" onClick={logoutHandler}/>
 					</div>
 					<div>
 					</div>
 				</div>
-				{
-					editing ? <> <Edit setEditing={setEditing} editing={editing}/> </> : null
-				}
 			</div>
+			<AnimatePresence>
+				{editing && <Edit setEditing={setEditing} editing={editing}/>}
+			</AnimatePresence>
 		</>
 	)
 }
