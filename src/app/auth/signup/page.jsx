@@ -27,7 +27,6 @@ export default function Page() {
 	const fileInputRef = useRef(null);
 
 	const {
-		setUserId,
 		setUserEmail,
 		setUserPass,
 		setUserName,
@@ -56,6 +55,11 @@ export default function Page() {
 
 		if (email === "" || pass === "" || name === "" || phone === "") {
 			alert("Input fields cannot be empty");
+			return
+		}
+
+		if (email.length < 8 || pass.length < 8) {
+			alert("Email and Password must be atleast 8 characters long");
 			return
 		}
 
@@ -94,21 +98,19 @@ export default function Page() {
 
 			if (data.status) {
 
-				setUserId(data.result._id)
-				setUserEmail(data.result.email)
-				setUserPass(data.result.pass)
-				setUserName(data.result.name)
-				setUserPhone(data.result.phone)
-				setUserPFP(data.result.pfp)
+				setUserEmail(email)
+				setUserPass(pass)
+				setUserName(name)
+				setUserPhone(phone)
+				setUserPFP(pfp)
 
-				router.push("/");
+				router.push("/auth/login");
 			} else {
 				alert(data.message);
 			}
 		} catch (e) {
 			console.log(e)
 		}
-
 	}
 
 	return (

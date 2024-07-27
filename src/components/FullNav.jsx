@@ -3,8 +3,10 @@
 import Link from "next/link";
 import s from '@/styles/components/nav.module.css';
 import {ModelIcon} from "../../public/icons/ModelIcon";
-import {UserIcon} from "../../public/icons/UserIcon";
 import {NavLeft, NavRight} from "@/lib/navHelper";
+import UserStore from "@/stores/UserStore";
+import {useEffect} from "react";
+import {UserIcon} from "../../public/icons/UserIcon";
 
 export const FullNav = () => {
 	return (
@@ -43,13 +45,26 @@ const Alpha = () => {
 }
 
 const Beta = () => {
+
+	const {
+		userPFP
+	} = UserStore()
+
 	return (
 		<>
 			<div className={s.beta}>
-				<UserIcon
-					fill="var(--primary-theme-color)"
-					className={s.img}
-				/>
+				{
+					userPFP.length !== 0 ?
+						<>
+							<img className={s.img} src={userPFP} alt=""/>
+						</> :
+						<>
+							<UserIcon
+								fill="var(--primary-theme-color)"
+								className={s.img}
+							/>
+						</>
+				}
 				{
 					NavRight.map((link, index) => (
 						<div key={index}>

@@ -5,10 +5,21 @@ import s from "@/styles/globals.module.css";
 import {VideoGrid} from "@/components/VideoGrid";
 import {ImageGrid} from "@/components/ImageGrid";
 import {EmptySpace} from "@/components/ui/EmptySpace";
+import {useRouter} from "next/navigation";
+import {useFetchUser} from "@/hooks/fetchUser";
+import {useEffect} from "react";
 
 export default function Page({params}) {
 
 	const slug = params.slug;
+
+	const router = useRouter();
+
+	const fetchUser = useFetchUser(router);
+
+	useEffect(() => {
+		fetchUser()
+	}, [fetchUser]);
 
 	return (
 		<div className={g.wrapper}>

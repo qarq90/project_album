@@ -5,14 +5,27 @@ import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
 import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
+import {useRouter} from "next/navigation";
+import {useFetchUser} from "@/hooks/fetchUser";
 
 export default function Page({params}) {
+
 	const slug = params.slug;
+
 	const [image, setImage] = useState(null);
 	const [resolution, setResolution] = useState("Original");
 
+	const router = useRouter();
+
+	const fetchUser = useFetchUser(router);
+
 	useEffect(() => {
-		const fetchImages = async () => {
+		fetchUser()
+	}, [fetchUser]);
+
+	useEffect(() => {
+		const fetchImage = async () => {
+
 			const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
 			const url = `https://api.pexels.com/v1/photos/${slug}`;
 
@@ -32,8 +45,8 @@ export default function Page({params}) {
 			}
 		};
 
-		fetchImages();
-	}, []);
+		fetchImage();
+	}, [slug]);
 
 	const resolutionUrls = {
 		Landscape: image?.src.landscape,

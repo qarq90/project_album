@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Title} from "@/components/ui/Title";
 import {Label} from "@/components/ui/Label";
@@ -63,15 +63,18 @@ export default function Page() {
 				const userId = data.result._id
 				Cookies.set("storageUserID", userId, {expires: 7})
 
-				router.push("/profile");
+				router.push("/");
 			} else {
 				alert(data.message);
 			}
 		} catch (e) {
 			console.log(e)
 		}
-
 	}
+
+	useEffect(() => {
+		Cookies.remove("storageUserID")
+	}, [])
 
 	return (
 		<>

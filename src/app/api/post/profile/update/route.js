@@ -10,7 +10,7 @@ export const POST = async (request) => {
 
 		let result = await Users.updateOne(
 			{
-				id: id,
+				email: email,
 			}, {
 				email: email,
 				pass: pass,

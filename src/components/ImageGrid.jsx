@@ -8,7 +8,7 @@ import s from "@/styles/home/home.module.css";
 
 export const ImageGrid = (props) => {
 	const [images, setImages] = useState([]);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(props.page);
 	const [loading, setLoading] = useState(true);
 
 	const fetchImages = async () => {
@@ -25,7 +25,6 @@ export const ImageGrid = (props) => {
 		try {
 			const response = await fetch(url, options);
 			const data = await response.json();
-			console.log(data);
 			setImages(data.photos);
 
 			setTimeout(() => {
@@ -49,7 +48,7 @@ export const ImageGrid = (props) => {
 	};
 
 	const loadMore = async () => {
-		const newPage = page + 1;
+		const newPage = Math.floor(Math.random() * 256) + 1;
 		setPage(newPage);
 
 		const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
@@ -80,13 +79,14 @@ export const ImageGrid = (props) => {
 					{images.map((image, index) => {
 						const cellType = getCellType(image.width, image.height);
 						return (
-							<div key={index} className={`${s.cell} ${s[cellType]}`}>
-								<Link className={s.imgCell} href={`/image/${image.id}`}>
-									<img
-										className={s.img}
-										src={image.src.original}
-										alt={image.alt}
-									/>
+							<div key={index} className={`${s.cell} ${s[cellType]} ${s.vidCell}`}>
+								<img
+									className={s.img}
+									src={image.src.original}
+									alt={image.alt}
+								/>
+								<Link className={s.vidLink} href={`/image/${image.id}`}>
+									View Image
 								</Link>
 							</div>
 						);

@@ -5,11 +5,23 @@ import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
 import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
+import {useFetchUser} from "@/hooks/fetchUser";
+import {useRouter} from "next/navigation";
 
 export default function Page({params}) {
+
 	const slug = params.slug;
+
 	const [video, setVideo] = useState(null);
 	const [resolution, setResolution] = useState("Original");
+
+	const router = useRouter();
+
+	const fetchUser = useFetchUser(router);
+
+	useEffect(() => {
+		fetchUser()
+	}, [fetchUser]);
 
 	useEffect(() => {
 		const fetchVideo = async () => {
@@ -26,7 +38,6 @@ export default function Page({params}) {
 			try {
 				const response = await fetch(url, options);
 				const data = await response.json();
-				console.log(data)
 				setVideo(data);
 			} catch (error) {
 				console.error('Error fetching the video:', error);

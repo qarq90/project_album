@@ -11,7 +11,7 @@ const UserStore = create((set) => ({
 	setUserPass: (userPass) => set(() => ({userPass})),
 	userPhone: null,
 	setUserPhone: (userPhone) => set(() => ({userPhone})),
-	userPFP: null,
+	userPFP: "",
 	setUserPFP: (userPFP) => set(() => ({userPFP}))
 }));
 

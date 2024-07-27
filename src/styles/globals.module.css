@@ -10,7 +10,8 @@
 }
 
 .type {
-    padding-left: 3rem;
+    display: block;
+    padding-left: 1rem;
     letter-spacing: 5px;
     color: var(--primary-theme-color);
     font-size: 3rem;

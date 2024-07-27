@@ -8,9 +8,11 @@ import s from "@/styles/home/home.module.css";
 import Link from "next/link";
 
 export const VideoGrid = (props) => {
+
 	const [videos, setVideos] = useState([]);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(props.page);
 	const [loading, setLoading] = useState(true);
+
 	const router = useRouter();
 
 	const fetchVideos = async () => {
@@ -27,7 +29,6 @@ export const VideoGrid = (props) => {
 		try {
 			const response = await fetch(url, options);
 			const data = await response.json();
-			console.log(data);
 			setVideos(data.videos);
 
 			setTimeout(() => {
@@ -51,7 +52,7 @@ export const VideoGrid = (props) => {
 	};
 
 	const loadMore = async () => {
-		const newPage = page + 1;
+		const newPage = Math.floor(Math.random() * 256) + 1;
 		setPage(newPage);
 
 		const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
@@ -88,7 +89,7 @@ export const VideoGrid = (props) => {
 									src={video.video_files[0].link}
 									controls
 									poster={video.image}
-									onClick={(e) => e.preventDefault()} // Prevent video from playing
+									onClick={(e) => e.preventDefault()}
 								/>
 								<Link className={s.vidLink} href={`/video/${video.id}`}>
 									Visit Video
