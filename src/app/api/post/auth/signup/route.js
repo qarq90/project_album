@@ -11,9 +11,7 @@ export const POST = async (request) => {
 		let result = await Users.findOne({
 			email: email,
 			pass: pass,
-			name: name,
 			phone: phone,
-			pfp: pfp
 		})
 
 		if (result) {
@@ -30,6 +28,13 @@ export const POST = async (request) => {
 				phone: phone,
 				pfp: pfp
 			})
+
+			let result = await Users.findOne({
+				email: email,
+				pass: pass,
+				phone: phone,
+			})
+
 			return NextResponse.json({
 				message: 'Signup Successful',
 				status: true,

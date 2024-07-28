@@ -40,6 +40,8 @@ export const useFetchUser = (router) => {
 				setUserPhone(data.result.phone);
 				setUserPFP(data.result.pfp);
 
+				return data.result
+
 			} catch (e) {
 				console.log(e);
 			}

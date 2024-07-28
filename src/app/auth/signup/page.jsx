@@ -1,6 +1,6 @@
 "use client"
 
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Title} from "@/components/ui/Title";
 import {Label} from "@/components/ui/Label";
@@ -12,7 +12,7 @@ import i from "@/styles/auth/auth.module.css"
 import Link from "next/link";
 import {UploadIcon} from "../../../../public/icons/UploadIcon";
 import {emailRegex, phoneRegex} from "@/lib/authHelper";
-import UserStore from "@/stores/UserStore";
+import Cookies from "js-cookie";
 
 export default function Page() {
 
@@ -25,14 +25,6 @@ export default function Page() {
 	const [pfp, setPfp] = useState("");
 
 	const fileInputRef = useRef(null);
-
-	const {
-		setUserEmail,
-		setUserPass,
-		setUserName,
-		setUserPhone,
-		setUserPFP
-	} = UserStore()
 
 	const handleFileButtonClick = () => {
 		fileInputRef.current.click();
@@ -98,13 +90,10 @@ export default function Page() {
 
 			if (data.status) {
 
-				setUserEmail(email)
-				setUserPass(pass)
-				setUserName(name)
-				setUserPhone(phone)
-				setUserPFP(pfp)
+				const userId = data.result._id
+				Cookies.set("storageUserID", userId, {expires: 7})
 
-				router.push("/auth/login");
+				router.push("/");
 			} else {
 				alert(data.message);
 			}
@@ -113,11 +102,14 @@ export default function Page() {
 		}
 	}
 
+	useEffect(() => {
+		Cookies.remove("storageUserID")
+	}, [])
+
 	return (
 		<>
 			<div className={s.container}>
 				<Title text="Signup"/>
-
 				<Label text="Email"/>
 				<Input placeholder="deepthorat06@gmail.com"
 				       type="text"

@@ -1,9 +1,5 @@
 export const NavLeft = [
 	{
-		text: 'Home',
-		href: "/"
-	},
-	{
 		text: 'Images',
 		href: "/images"
 	},

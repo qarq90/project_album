@@ -30,7 +30,7 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-    background-color: var(--primary-light-color);
+    background-color: var(--secondary-dark-color);
 }
 
 * {
@@ -38,5 +38,5 @@ a {
 }
 
 * {
-    scrollbar-color: var(--primary-theme-color) var(--primary-light-color);
+    scrollbar-color: var(--primary-theme-color) var(--primary-dark-color);
 }

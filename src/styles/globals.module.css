@@ -13,6 +13,7 @@
     display: block;
     padding-left: 1rem;
     letter-spacing: 5px;
-    color: var(--primary-theme-color);
+    color: var(--primary-dark-color);
     font-size: 3rem;
+    text-shadow: 1px 1px var(--primary-theme-color);
 }

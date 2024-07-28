@@ -4,9 +4,17 @@ import {useEffect, useState} from "react";
 import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
+import {
+	darkenRgb,
+	handleDownload,
+	hexToRgb,
+	removeNumbersAndTrailingChars,
+	rgbToComplementary
+} from "@/lib/imageHelper";
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/fetchUser";
+import {AddToAlbum} from "@/components/AddToAlbum";
+import ImageStore from "@/stores/ImageStore";
 
 export default function Page({params}) {
 
@@ -14,6 +22,14 @@ export default function Page({params}) {
 
 	const [image, setImage] = useState(null);
 	const [resolution, setResolution] = useState("Original");
+	const [openAlbum, setOpenAlbum] = useState(false);
+
+	const {
+		imageId,
+		setImageId,
+		imageData,
+		setImageData
+	} = ImageStore()
 
 	const router = useRouter();
 
@@ -39,7 +55,18 @@ export default function Page({params}) {
 			try {
 				const response = await fetch(url, options);
 				const data = await response.json();
+				setImageId(data.id)
+				setImageData(data)
 				setImage(data);
+
+				let rgb = hexToRgb(data.avg_color);
+				let complementary = rgbToComplementary(rgb)
+				let darkerComplementary = darkenRgb(complementary, 100)
+
+				document.documentElement.style.setProperty('--primary-theme-color', data.avg_color ? complementary : '#a67b5b');
+				document.documentElement.style.setProperty('--primary-dark-color', data.avg_color ? darkerComplementary : '#1f1f1f');
+				document.documentElement.style.setProperty('--secondary-dark-color', data.avg_color ? rgb : '#2d2d2d');
+
 			} catch (error) {
 				console.error('Error fetching the images:', error);
 			}
@@ -85,6 +112,7 @@ export default function Page({params}) {
 			const blob = await response.blob();
 			const base64 = await blobToBase64(blob);
 			console.log(base64)
+			setOpenAlbum(true)
 			return base64;
 		} catch (error) {
 			console.error('Error converting image URL to base64:', error);
@@ -92,40 +120,43 @@ export default function Page({params}) {
 	}
 
 	return (
-		<div className={g.wrapper}>
-			{image ? (
-				<>
-					<img
-						className={s.image}
-						src={image.src.original}
-						alt={image.alt || slug}
-						width={image.width}
-						height={image.height}
-						style={{objectFit: 'cover'}}
-					/>
-					<h2 className={s.name}>Photographer: {image.photographer}</h2>
-					<div className={s.bottomContainer}>
-						<select
-							className={s.select}
-							value={resolution}
-							onChange={(e) => setResolution(e.target.value)}
-						>
-							<option value="Landscape">Landscape</option>
-							<option value="Large">Large</option>
-							<option value="2X Large">2X Large</option>
-							<option value="Medium">Medium</option>
-							<option value="Original">Original</option>
-							<option value="Portrait">Portrait</option>
-							<option value="Small">Small</option>
-							<option value="Tiny">Tiny</option>
-						</select>
-						<Button text="Download" onClick={downloadHandler}/>
-						{/*<Button text="Add to Album" onClick={albumHandler}/>*/}
-					</div>
-				</>
-			) : (
-				<p>Loading...</p>
-			)}
-		</div>
+		<>
+			<div className={g.wrapper}>
+				{image ? (
+					<>
+						<img
+							className={s.image}
+							src={image.src.original}
+							alt={image.alt || slug}
+							width={image.width}
+							height={image.height}
+							style={{objectFit: 'cover'}}
+						/>
+						<h2 className={s.name}>Photographer: {image.photographer}</h2>
+						<div className={s.bottomContainer}>
+							<select
+								className={s.select}
+								value={resolution}
+								onChange={(e) => setResolution(e.target.value)}
+							>
+								<option value="Landscape">Landscape</option>
+								<option value="Large">Large</option>
+								<option value="2X Large">2X Large</option>
+								<option value="Medium">Medium</option>
+								<option value="Original">Original</option>
+								<option value="Portrait">Portrait</option>
+								<option value="Small">Small</option>
+								<option value="Tiny">Tiny</option>
+							</select>
+							<Button text="Download" onClick={downloadHandler}/>
+							<Button text="Add to Album" onClick={albumHandler}/>
+						</div>
+					</>
+				) : (
+					<p>Loading...</p>
+				)}
+			</div>
+			{openAlbum ? <AddToAlbum openAlbum={openAlbum} setOpenAlbum={setOpenAlbum}/> : null}
+		</>
 	);
 }

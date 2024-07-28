@@ -22,7 +22,7 @@
     width: auto;
     border-radius: 8px;
     color: var(--primary-theme-color);
-    box-shadow: 4px 4px 4px 0 var(--box-shadow-color);
+    box-shadow: 4px 4px 4px 0 #111111;
     background-color: var(--primary-dark-color);
     transition: 0.25s all ease-in-out;
     padding: 8px;
@@ -64,15 +64,15 @@
     border-radius: 4px;
     height: 100%;
     object-fit: cover;
-    box-shadow: 6px 6px 5px var(--primary-dark-color);
+    box-shadow: 6px 6px 5px #111111;
     transition: 0.25s all ease-in-out;
 }
 
 .img:hover {
     scale: 0.95;
-    box-shadow: 3px 3px 5px var(--primary-dark-color);
+    box-shadow: 3px 3px 5px #111111;
 }
 
 .imgCell {
-    box-shadow: 6px 6px 5px var(--primary-dark-color);
+    box-shadow: 6px 6px 5px #111111;
 }

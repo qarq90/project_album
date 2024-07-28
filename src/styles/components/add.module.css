@@ -1,0 +1,44 @@
+.add {
+    border-radius: 8px;
+    background-color: var(--secondary-dark-color);
+    width: 50vw;
+    height: 75vh;
+    position: fixed;
+    box-shadow: 4px 4px 4px 4px var(--box-shadow-color);
+    top: 10%;
+    left: 15%;
+    padding: 2rem 10rem;
+    overflow-y: auto;
+}
+
+.albumGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: 16px;
+}
+
+.album {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    height: 200px;
+    width: auto;
+    background-color: var(--primary-theme-color);
+    transition: 0.25s all ease-in-out;
+}
+
+.album:hover {
+    cursor: pointer;
+    scale: 0.95;
+}
+
+.btnContainer {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+}

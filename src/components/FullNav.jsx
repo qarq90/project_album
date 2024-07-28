@@ -5,10 +5,22 @@ import s from '@/styles/components/nav.module.css';
 import {ModelIcon} from "../../public/icons/ModelIcon";
 import {NavLeft, NavRight} from "@/lib/navHelper";
 import UserStore from "@/stores/UserStore";
-import {useEffect} from "react";
 import {UserIcon} from "../../public/icons/UserIcon";
+import {darkenRgb, rgbToComplementary} from "@/lib/imageHelper";
 
 export const FullNav = () => {
+	const r = Math.floor(Math.random() * 100) + 1;
+	const g = Math.floor(Math.random() * 100) + 1;
+	const b = Math.floor(Math.random() * 100) + 1;
+
+	const rgb = `rgb(${r}, ${g}, ${b})`;
+	let complementary = rgbToComplementary(rgb)
+	let darkerComplementary = darkenRgb(complementary, 100)
+
+	document.documentElement.style.setProperty('--primary-theme-color', complementary);
+	document.documentElement.style.setProperty('--primary-dark-color', darkerComplementary);
+	document.documentElement.style.setProperty('--secondary-dark-color', rgb);
+
 	return (
 		<>
 			<div className={s.nav}>
@@ -56,7 +68,7 @@ const Beta = () => {
 				{
 					userPFP.length !== 0 ?
 						<>
-							<img className={s.img} src={userPFP} alt=""/>
+							<img className={s.img} src={userPFP} alt="pfp"/>
 						</> :
 						<>
 							<UserIcon
