@@ -9,6 +9,7 @@ import {UserIcon} from "../../public/icons/UserIcon";
 import {darkenRgb, rgbToComplementary} from "@/lib/imageHelper";
 
 export const FullNav = () => {
+
 	const r = Math.floor(Math.random() * 100) + 1;
 	const g = Math.floor(Math.random() * 100) + 1;
 	const b = Math.floor(Math.random() * 100) + 1;
