@@ -4,13 +4,7 @@ import {useEffect, useState} from "react";
 import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {
-	darkenRgb,
-	handleDownload,
-	hexToRgb,
-	removeNumbersAndTrailingChars,
-	rgbToComplementary
-} from "@/lib/imageHelper";
+import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/fetchUser";
 import {AddToAlbum} from "@/components/AddToAlbum";
@@ -25,9 +19,7 @@ export default function Page({params}) {
 	const [openAlbum, setOpenAlbum] = useState(false);
 
 	const {
-		imageId,
 		setImageId,
-		imageData,
 		setImageData
 	} = ImageStore()
 
@@ -58,15 +50,6 @@ export default function Page({params}) {
 				setImageId(data.id)
 				setImageData(data)
 				setImage(data);
-
-				let rgb = hexToRgb(data.avg_color);
-				let complementary = rgbToComplementary(rgb)
-				let darkerComplementary = darkenRgb(complementary, 100)
-
-				document.documentElement.style.setProperty('--primary-theme-color', data.avg_color ? complementary : '#a67b5b');
-				document.documentElement.style.setProperty('--primary-dark-color', data.avg_color ? darkerComplementary : '#1f1f1f');
-				document.documentElement.style.setProperty('--secondary-dark-color', data.avg_color ? rgb : '#2d2d2d');
-
 			} catch (error) {
 				console.error('Error fetching the images:', error);
 			}
@@ -111,7 +94,6 @@ export default function Page({params}) {
 			const response = await fetch(image.src.original);
 			const blob = await response.blob();
 			const base64 = await blobToBase64(blob);
-			console.log(base64)
 			setOpenAlbum(true)
 			return base64;
 		} catch (error) {
@@ -128,9 +110,6 @@ export default function Page({params}) {
 							className={s.image}
 							src={image.src.original}
 							alt={image.alt || slug}
-							width={image.width}
-							height={image.height}
-							style={{objectFit: 'cover'}}
 						/>
 						<h2 className={s.name}>Photographer: {image.photographer}</h2>
 						<div className={s.bottomContainer}>

@@ -1,7 +1,11 @@
 .image {
-    height: 600px;
-    width: 100%;
-    object-fit: cover;
+    /*height: 600px;*/
+    /*width: 100%;*/
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    width: auto;
+    height: auto;
 }
 
 .video {
@@ -13,8 +17,7 @@
 .name {
     margin-bottom: 16px;
     margin-top: 16px;
-    color: var(--primary-dark-color);
-    text-shadow: 1px 1px var(--primary-theme-color);
+    color: var(--primary-theme-color);
 }
 
 .select {

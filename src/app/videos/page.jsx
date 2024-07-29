@@ -3,7 +3,7 @@
 import s from "@/styles/globals.module.css";
 import {EmptySpace} from "@/components/ui/EmptySpace";
 import {VideoGrid} from "@/components/VideoGrid";
-import {Skeleton} from "@/components/Skeleton";
+import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import {useFetchPage} from "@/hooks/fetchPage";
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/fetchUser";
@@ -28,7 +28,7 @@ export default function Page() {
 					loading ? <>
 						<VideoGrid page={page} url={`https://api.pexels.com/videos/popular?per_page=20`}/>
 						<EmptySpace/>
-					</> : <Skeleton/>
+					</> : <SkeletonAlpha/>
 				}
 			</div>
 		</>

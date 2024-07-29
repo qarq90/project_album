@@ -3,7 +3,7 @@
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/Button";
-import {Skeleton} from "@/components/Skeleton";
+import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import s from "@/styles/home/home.module.css";
 import Link from "next/link";
 
@@ -77,7 +77,7 @@ export const VideoGrid = (props) => {
 	return (
 		<>
 			{loading ? (
-				<Skeleton/>
+				<SkeletonAlpha/>
 			) : (
 				<div className={s.vidGrid}>
 					{videos.map((video, index) => {

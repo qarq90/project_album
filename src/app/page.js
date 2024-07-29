@@ -6,7 +6,7 @@ import {useEffect} from "react";
 import {ImageGrid} from "@/components/ImageGrid";
 import {VideoGrid} from "@/components/VideoGrid";
 import {EmptySpace} from "@/components/ui/EmptySpace";
-import {Skeleton} from "@/components/Skeleton";
+import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import {useFetchUser} from "@/hooks/fetchUser";
 import {useFetchPage} from "@/hooks/fetchPage";
 
@@ -37,10 +37,10 @@ export default function Page() {
 					</> : <>
 						<span className={s.type}>IMAGES</span>
 						<EmptySpace/>
-						<Skeleton/>
+						<SkeletonAlpha/>
 						<span className={s.type}>VIDEOS</span>
 						<EmptySpace/>
-						<Skeleton/>
+						<SkeletonAlpha/>
 					</>
 				}
 			</div>

@@ -30,33 +30,13 @@ export function removeNumbersAndTrailingChars(str) {
 	return cleanedStr;
 }
 
-export function hexToRgb(hex) {
-	hex = hex.replace(/^#/, '');
-
-	let bigint = parseInt(hex, 16);
-	let r = (bigint >> 16) & 255;
-	let g = (bigint >> 8) & 255;
-	let b = bigint & 255;
-
-	return `rgb(${r}, ${g}, ${b})`;
-}
-
-export function rgbToComplementary(rgb) {
-	let [r, g, b] = rgb.match(/\d+/g).map(Number);
-
-	let compR = 255 - r;
-	let compG = 255 - g;
-	let compB = 255 - b;
-
-	return `rgb(${compR}, ${compG}, ${compB})`;
-}
-
-export function darkenRgb(rgb, factor) {
-	let [r, g, b] = rgb.match(/\d+/g).map(Number);
-
-	r = Math.max(0, Math.min(255, Math.round(r - factor)))
-	g = Math.max(0, Math.min(255, Math.round(g - factor)))
-	b = Math.max(0, Math.min(255, Math.round(b - factor)))
-
-	return `rgb(${r}, ${g}, ${b})`;
+export async function urlToBase64(url) {
+	const response = await fetch(url);
+	const blob = await response.blob();
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => resolve(reader.result);
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
 }

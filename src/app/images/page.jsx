@@ -3,7 +3,7 @@
 import s from "@/styles/globals.module.css";
 import {EmptySpace} from "@/components/ui/EmptySpace";
 import {ImageGrid} from "@/components/ImageGrid";
-import {Skeleton} from "@/components/Skeleton";
+import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import {useFetchPage} from "@/hooks/fetchPage";
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/fetchUser";
@@ -28,7 +28,7 @@ export default function Page() {
 					loading ? <>
 						<ImageGrid page={page} url={`https://api.pexels.com/v1/curated?per_page=10`}/>
 						<EmptySpace/>
-					</> : <Skeleton/>
+					</> : <SkeletonAlpha/>
 				}
 			</div>
 		</>

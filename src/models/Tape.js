@@ -2,8 +2,12 @@ import mongoose from 'mongoose';
 
 const {Schema} = mongoose;
 
-const ImageSchema = new Schema({
+const VideoSchema = new Schema({
 	base64: {
+		type: String,
+		required: true
+	},
+	videoId: {
 		type: String,
 		required: true
 	},
@@ -17,33 +21,33 @@ const ImageSchema = new Schema({
 	}
 });
 
-const AlbumSchema = new Schema({
-	albumId: {
+const TapeSchema = new Schema({
+	tapeId: {
 		type: String,
 		required: true
 	},
-	albumTitle: {
+	tapeTitle: {
 		type: String,
 		required: true
 	},
-	albumData: [ImageSchema]
+	tapeData: [VideoSchema]
 });
 
-const UserAlbumSchema = new Schema({
+const UserTapeSchema = new Schema({
 	userId: {
 		type: String,
 		required: true,
 		unique: true
 	},
-	albums: [AlbumSchema]
+	tapes: [TapeSchema]
 });
 
-let Albums;
+let Tapes;
 
 try {
-	Albums = mongoose.model('Albums');
+	Tapes = mongoose.model('Tapes');
 } catch (e) {
-	Albums = mongoose.model('Albums', UserAlbumSchema);
+	Tapes = mongoose.model('Tapes', UserTapeSchema);
 }
 
-export default Albums;
+export default Tapes;

@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/Button";
-import {Skeleton} from "@/components/Skeleton";
+import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import Link from "next/link";
 import s from "@/styles/home/home.module.css";
 
@@ -73,7 +73,7 @@ export const ImageGrid = (props) => {
 	return (
 		<>
 			{loading ? (
-				<Skeleton/>
+				<SkeletonAlpha/>
 			) : (
 				<div className={s.imgGrid}>
 					{images.map((image, index) => {

@@ -1,6 +1,6 @@
 import s from "@/styles/components/skeleton.module.css"
 
-export const Skeleton = () => {
+export const SkeletonAlpha = () => {
 	return (
 		<>
 			<div className={s.container}>

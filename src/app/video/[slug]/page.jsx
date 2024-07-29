@@ -7,6 +7,8 @@ import {Button} from "@/components/ui/Button";
 import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
 import {useFetchUser} from "@/hooks/fetchUser";
 import {useRouter} from "next/navigation";
+import VideoStore from "@/stores/VideoStore";
+import {AddToTape} from "@/components/AddToTape";
 
 export default function Page({params}) {
 
@@ -14,6 +16,12 @@ export default function Page({params}) {
 
 	const [video, setVideo] = useState(null);
 	const [resolution, setResolution] = useState("Original");
+	const [openTape, setOpenTape] = useState(false);
+
+	const {
+		setVideoId,
+		setVideoData
+	} = VideoStore()
 
 	const router = useRouter();
 
@@ -39,6 +47,8 @@ export default function Page({params}) {
 				const response = await fetch(url, options);
 				const data = await response.json();
 				setVideo(data);
+				setVideoId(data.id);
+				setVideoData(data)
 			} catch (error) {
 				console.error('Error fetching the video:', error);
 			}
@@ -77,7 +87,7 @@ export default function Page({params}) {
 			const response = await fetch(video.video_files[1].link);
 			const blob = await response.blob();
 			const base64 = await blobToBase64(blob);
-			console.log(base64);
+			setOpenTape(true);
 			return base64;
 		} catch (error) {
 			console.error('Error converting video URL to base64:', error);
@@ -85,38 +95,41 @@ export default function Page({params}) {
 	}
 
 	return (
-		<div className={g.wrapper}>
-			{video ? (
-				<>
-					<video
-						className={s.video}
-						src={video.video_files[1].link}
-						controls
-						poster={video.image}
-						width={video.width}
-						height={video.height}
-						style={{objectFit: 'cover'}}
-					/>
-					<h2 className={s.name}>Videographer: {video.user.name}</h2>
-					<div className={s.bottomContainer}>
-						<select
-							className={s.select}
-							value={resolution}
-							onChange={(e) => setResolution(e.target.value)}
-						>
-							{Object.keys(resolutionUrls).map((quality) => (
-								<option key={quality} value={quality}>
-									{quality.toUpperCase()}
-								</option>
-							))}
-						</select>
-						<Button text="Download" onClick={downloadHandler}/>
-						{/*<Button text="Add to Album" onClick={albumHandler}/>*/}
-					</div>
-				</>
-			) : (
-				<p>Loading...</p>
-			)}
-		</div>
+		<>
+			<div className={g.wrapper}>
+				{video ? (
+					<>
+						<video
+							className={s.video}
+							src={video.video_files[1].link}
+							controls
+							poster={video.image}
+							width={video.width}
+							height={video.height}
+							style={{objectFit: 'cover'}}
+						/>
+						<h2 className={s.name}>Videographer: {video.user.name}</h2>
+						<div className={s.bottomContainer}>
+							<select
+								className={s.select}
+								value={resolution}
+								onChange={(e) => setResolution(e.target.value)}
+							>
+								{Object.keys(resolutionUrls).map((quality) => (
+									<option key={quality} value={quality}>
+										{quality.toUpperCase()}
+									</option>
+								))}
+							</select>
+							<Button text="Download" onClick={downloadHandler}/>
+							<Button text="Add to Album" onClick={albumHandler}/>
+						</div>
+					</>
+				) : (
+					<p>Loading...</p>
+				)}
+			</div>
+			{openTape ? <AddToTape openTape={openTape} setOpenTape={setOpenTape}/> : null}
+		</>
 	);
 }
