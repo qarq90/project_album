@@ -2,11 +2,11 @@
 
 import g from "@/styles/globals.module.css";
 import s from "@/styles/globals.module.css";
-import {VideoGrid} from "@/components/VideoGrid";
-import {ImageGrid} from "@/components/ImageGrid";
+import {GridVideo} from "@/components/GridVideo";
+import {GridImage} from "@/components/GridImage";
 import {EmptySpace} from "@/components/ui/EmptySpace";
 import {useRouter} from "next/navigation";
-import {useFetchUser} from "@/hooks/fetchUser";
+import {useFetchUser} from "@/hooks/useFetchUser";
 import {useEffect} from "react";
 
 export default function Page({params}) {
@@ -18,18 +18,18 @@ export default function Page({params}) {
 	const fetchUser = useFetchUser(router);
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	return (
 		<div className={g.wrapper}>
 			<span className={g.type}>IMAGES</span>
 			<EmptySpace/>
-			<ImageGrid url={`https://api.pexels.com/v1/search?query=${slug}&per_page=10`}/>
+			<GridImage url={`https://api.pexels.com/v1/search?query=${slug}&per_page=10`}/>
 			<EmptySpace/>
 			<span className={s.type}>VIDEOS</span>
 			<EmptySpace/>
-			<VideoGrid url={`https://api.pexels.com/videos/search?query=${slug}&per_page=10`}/>
+			<GridVideo url={`https://api.pexels.com/videos/search?query=${slug}&per_page=10`}/>
 		</div>
 	);
 }

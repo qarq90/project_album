@@ -16,3 +16,43 @@
     color: var(--primary-theme-color);
     font-size: 3rem;
 }
+
+.collectionGrid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 8px 0 32px;
+}
+
+.collectionItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    height: 200px;
+    width: auto;
+    transition: 0.25s all ease-in-out;
+}
+
+.collectionItem:hover {
+    cursor: pointer;
+    scale: 0.95;
+}
+
+.collectionName{
+    border-radius: 4px;
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 0.75rem;
+    height: 1.5rem;
+    font-size: 1.75rem;
+    color: var(--box-shadow-color);
+    text-shadow: 2px 2px var(--primary-theme-color);
+}

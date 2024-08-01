@@ -4,11 +4,11 @@ import UserStore from "@/stores/UserStore";
 import p from "@/styles/profile/profile.module.css"
 import {Button} from "@/components/ui/Button";
 import {useEffect, useState} from "react";
-import {Edit} from "@/components/Edit";
+import {ProfileEdit} from "@/components/ProfileEdit";
 import {useRouter} from "next/navigation";
 import {AnimatePresence} from "framer-motion";
 import {UserIcon} from "../../../public/icons/UserIcon";
-import {useFetchUser} from "@/hooks/fetchUser";
+import {useFetchUser} from "@/hooks/useFetchUser";
 
 export default function Page() {
 
@@ -44,7 +44,7 @@ export default function Page() {
 	}
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	return (
@@ -78,7 +78,7 @@ export default function Page() {
 				</div>
 			</div>
 			<AnimatePresence>
-				{editing && <Edit setEditing={setEditing} editing={editing}/>}
+				{editing && <ProfileEdit setEditing={setEditing} editing={editing}/>}
 			</AnimatePresence>
 		</>
 	)

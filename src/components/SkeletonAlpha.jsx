@@ -1,22 +1,26 @@
-import s from "@/styles/components/skeleton.module.css"
+import s from "@/styles/components/skeleton.module.css";
+
+const shuffleArray = (array) => {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
+	return array;
+};
 
 export const SkeletonAlpha = () => {
+
+	const gridTypes = ['square', 'panorama', 'portrait', 'landscape'];
+
+	let gridItems = [...gridTypes, ...gridTypes, ...gridTypes];
+
+	gridItems = shuffleArray(gridItems);
+
 	return (
-		<>
-			<div className={s.container}>
-				<div className={s.a}></div>
-				<div className={s.b}></div>
-				<div className={s.c}></div>
-				<div className={s.d}></div>
-				<div className={s.e}></div>
-				<div className={s.f}></div>
-				<div className={s.g}></div>
-				<div className={s.h}></div>
-				<div className={s.i}></div>
-				<div className={s.j}></div>
-				<div className={s.k}></div>
-				<div className={s.l}></div>
-			</div>
-		</>
-	)
-}
+		<div className={s.container}>
+			{gridItems.map((type, index) => (
+				<div key={index} className={s[type]}></div>
+			))}
+		</div>
+	);
+};

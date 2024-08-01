@@ -1,10 +1,10 @@
 "use client"
 
-import Link from "next/link";
 import s from '@/styles/components/nav.module.css';
+import Link from "next/link";
 import {ModelIcon} from "../../public/icons/ModelIcon";
 
-export const HalfNav = () => {
+export const NavHalf = () => {
 
 	return (
 		<>

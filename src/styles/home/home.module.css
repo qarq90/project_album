@@ -13,7 +13,6 @@
 .cell {
     position: relative;
     overflow: hidden;
-    cursor: pointer;
 }
 
 .cell > .vidLink {
@@ -66,11 +65,6 @@
     object-fit: cover;
     box-shadow: 6px 6px 5px #111111;
     transition: 0.25s all ease-in-out;
-}
-
-.img:hover {
-    scale: 0.95;
-    box-shadow: 3px 3px 5px #111111;
 }
 
 .imgCell {

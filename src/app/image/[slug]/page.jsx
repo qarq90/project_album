@@ -4,9 +4,9 @@ import {useEffect, useState} from "react";
 import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
+import {blobToBase64, handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
 import {useRouter} from "next/navigation";
-import {useFetchUser} from "@/hooks/fetchUser";
+import {useFetchUser} from "@/hooks/useFetchUser";
 import {AddToAlbum} from "@/components/AddToAlbum";
 import ImageStore from "@/stores/ImageStore";
 
@@ -20,7 +20,7 @@ export default function Page({params}) {
 
 	const {
 		setImageId,
-		setImageData
+		setImageStore
 	} = ImageStore()
 
 	const router = useRouter();
@@ -28,7 +28,7 @@ export default function Page({params}) {
 	const fetchUser = useFetchUser(router);
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	useEffect(() => {
@@ -48,15 +48,16 @@ export default function Page({params}) {
 				const response = await fetch(url, options);
 				const data = await response.json();
 				setImageId(data.id)
-				setImageData(data)
+				setImageStore(data)
 				setImage(data);
 			} catch (error) {
 				console.error('Error fetching the images:', error);
 			}
 		};
 
-		fetchImage();
-	}, [slug]);
+		fetchImage().then(() => console.log("Image Fetched Successfully"));
+
+	}, [setImageId, setImageStore, slug]);
 
 	const resolutionUrls = {
 		Landscape: image?.src.landscape,
@@ -74,19 +75,10 @@ export default function Page({params}) {
 			let name = image.url ? image.url.split('/').pop() : 'download.png';
 			name = removeNumbersAndTrailingChars(name);
 
-			handleDownload(resolutionUrls[resolution], name);
+			handleDownload(resolutionUrls[resolution], name).then(() => console.log("Downloading image"));
 		} else {
 			console.log('No image available or resolution is not set.');
 		}
-	}
-
-	function blobToBase64(blob) {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.onloadend = () => resolve(reader.result);
-			reader.onerror = reject;
-			reader.readAsDataURL(blob);
-		});
 	}
 
 	async function albumHandler() {

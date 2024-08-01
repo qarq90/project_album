@@ -4,8 +4,8 @@ import {useEffect, useState} from "react";
 import s from "@/styles/image/image.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/imageHelper";
-import {useFetchUser} from "@/hooks/fetchUser";
+import {blobToBase64, handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
+import {useFetchUser} from "@/hooks/useFetchUser";
 import {useRouter} from "next/navigation";
 import VideoStore from "@/stores/VideoStore";
 import {AddToTape} from "@/components/AddToTape";
@@ -20,7 +20,7 @@ export default function Page({params}) {
 
 	const {
 		setVideoId,
-		setVideoData
+		setVideoStore
 	} = VideoStore()
 
 	const router = useRouter();
@@ -28,7 +28,7 @@ export default function Page({params}) {
 	const fetchUser = useFetchUser(router);
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	useEffect(() => {
@@ -48,14 +48,15 @@ export default function Page({params}) {
 				const data = await response.json();
 				setVideo(data);
 				setVideoId(data.id);
-				setVideoData(data)
+				setVideoStore(data)
 			} catch (error) {
 				console.error('Error fetching the video:', error);
 			}
 		};
 
-		fetchVideo();
-	}, [slug]);
+		fetchVideo().then(() => console.log("Video Fetched Successfully"));
+
+	}, [setVideoId, setVideoStore, slug]);
 
 	const resolutionUrls = video?.video_files.reduce((acc, file) => {
 		acc[file.quality] = file.link;
@@ -67,19 +68,10 @@ export default function Page({params}) {
 			let name = video.url ? video.url.split('/').pop() : 'download.mp4';
 			name = removeNumbersAndTrailingChars(name);
 
-			handleDownload(resolutionUrls[resolution], name);
+			handleDownload(resolutionUrls[resolution], name).then(() => console.log("Downloading video"));
 		} else {
 			console.log('No video available or resolution is not set.');
 		}
-	}
-
-	function blobToBase64(blob) {
-		return new Promise((resolve, reject) => {
-			const reader = new FileReader();
-			reader.onloadend = () => resolve(reader.result);
-			reader.onerror = reject;
-			reader.readAsDataURL(blob);
-		});
 	}
 
 	async function albumHandler() {

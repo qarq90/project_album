@@ -2,34 +2,27 @@
 
 import s from "@/styles/globals.module.css";
 import {EmptySpace} from "@/components/ui/EmptySpace";
-import {ImageGrid} from "@/components/ImageGrid";
-import {SkeletonAlpha} from "@/components/SkeletonAlpha";
-import {useFetchPage} from "@/hooks/fetchPage";
+import {GridImage} from "@/components/GridImage";
 import {useRouter} from "next/navigation";
-import {useFetchUser} from "@/hooks/fetchUser";
+import {useFetchUser} from "@/hooks/useFetchUser";
 import {useEffect} from "react";
 
 export default function Page() {
 
-	const {loading, page} = useFetchPage();
 
 	const router = useRouter();
 
 	const fetchUser = useFetchUser(router);
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	return (
 		<>
 			<div className={s.wrapper}>
-				{
-					loading ? <>
-						<ImageGrid page={page} url={`https://api.pexels.com/v1/curated?per_page=10`}/>
-						<EmptySpace/>
-					</> : <SkeletonAlpha/>
-				}
+				<GridImage url={`https://api.pexels.com/v1/curated?per_page=4`}/>
+				<EmptySpace/>
 			</div>
 		</>
 	)

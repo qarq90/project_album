@@ -2,10 +2,10 @@
 
 import {Inter} from "next/font/google";
 import "./globals.css";
-import {FullNav} from "@/components/FullNav";
+import {NavFull} from "@/components/NavFull";
 import {Searchbar} from "@/components/Searchbar";
 import {usePathname} from "next/navigation";
-import {HalfNav} from "@/components/HalfNav";
+import {NavHalf} from "@/components/NavHalf";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -25,10 +25,10 @@ export default function RootLayout({children}) {
 			{
 				pathname === "/auth/login" || pathname === "/auth/signup" ?
 					<>
-						<HalfNav/>
+						<NavHalf/>
 					</> :
 					<>
-						<FullNav/>
+						<NavFull/>
 						<Searchbar/>
 					</>
 			}

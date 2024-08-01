@@ -6,9 +6,8 @@ import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
 import UserStore from "@/stores/UserStore";
-import {urlToBase64} from "@/lib/imageHelper";
 import VideoStore from "@/stores/VideoStore";
-import {removeNameFromURL} from "@/lib/videoHelper";
+import {removeNameFromURL, urlToBase64} from "@/lib/helperFunctions";
 
 export const AddToTape = (props) => {
 
@@ -17,7 +16,7 @@ export const AddToTape = (props) => {
 	const [tapes, setTapes] = useState(null);
 
 	const {
-		videoData
+		videoStore
 	} = VideoStore();
 
 	const {
@@ -42,8 +41,8 @@ export const AddToTape = (props) => {
 			return;
 		}
 
-		const base64 = await urlToBase64(videoData.image)
-		const videoAlt = removeNameFromURL(videoData.url);
+		const base64 = await urlToBase64(videoStore.image)
+		const videoAlt = removeNameFromURL(videoStore.url);
 
 		const request = {
 			userId: userId,
@@ -54,7 +53,7 @@ export const AddToTape = (props) => {
 					tapeData: [
 						{
 							base64: base64,
-							videoId: videoData.id,
+							videoId: videoStore.id,
 							description: videoAlt,
 							createdAt: new Date().toISOString()
 						}
@@ -86,15 +85,15 @@ export const AddToTape = (props) => {
 
 	async function addToCurrentTape(tapeId, index) {
 		try {
-			const base64 = await urlToBase64(videoData.image);
-			const videoAlt = removeNameFromURL(videoData.url);
+			const base64 = await urlToBase64(videoStore.image);
+			const videoAlt = removeNameFromURL(videoStore.url);
 
 			const request = {
 				userId: userId,
 				tapeId: tapeId,
 				video: {
 					base64: base64,
-					videoId: videoData.id,
+					videoId: videoStore.id,
 					description: videoAlt,
 					createdAt: new Date().toISOString()
 				}

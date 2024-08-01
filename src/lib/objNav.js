@@ -8,8 +8,8 @@ export const NavLeft = [
 		href: "/videos"
 	},
 	{
-		text: 'Albums',
-		href: "/albums"
+		text: 'Your Collections',
+		href: "/collections"
 	},
 ]
 

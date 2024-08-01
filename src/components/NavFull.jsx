@@ -1,13 +1,13 @@
 "use client"
 
-import Link from "next/link";
 import s from '@/styles/components/nav.module.css';
-import {ModelIcon} from "../../public/icons/ModelIcon";
-import {NavLeft, NavRight} from "@/lib/navHelper";
+import Link from "next/link";
 import UserStore from "@/stores/UserStore";
+import {NavLeft, NavRight} from "@/lib/objNav";
+import {ModelIcon} from "../../public/icons/ModelIcon";
 import {UserIcon} from "../../public/icons/UserIcon";
 
-export const FullNav = () => {
+export const NavFull = () => {
 
 	return (
 		<>

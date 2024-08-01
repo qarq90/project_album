@@ -11,7 +11,7 @@ import s from "@/styles/globals.module.css"
 import i from "@/styles/auth/auth.module.css"
 import Link from "next/link";
 import {UploadIcon} from "../../../../public/icons/UploadIcon";
-import {emailRegex, phoneRegex} from "@/lib/authHelper";
+import {emailRegex, phoneRegex} from "@/lib/helperAuth";
 import Cookies from "js-cookie";
 
 export default function Page() {

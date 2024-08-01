@@ -1,13 +1,13 @@
-import ImageStore from "@/stores/ImageStore";
-import {useEffect, useState} from "react";
-import {slideIn} from "@/styles/animations/slide";
 import a from "@/styles/components/add.module.css";
+import ImageStore from "@/stores/ImageStore";
+import UserStore from "@/stores/UserStore";
+import {slideIn} from "@/styles/animations/slide";
 import {AnimatePresence, motion} from "framer-motion";
+import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
-import UserStore from "@/stores/UserStore";
-import {urlToBase64} from "@/lib/imageHelper";
+import {urlToBase64} from "@/lib/helperFunctions";
 
 export const AddToAlbum = (props) => {
 
@@ -16,7 +16,7 @@ export const AddToAlbum = (props) => {
 	const [albums, setAlbums] = useState(null);
 
 	const {
-		imageData
+		imageStore
 	} = ImageStore()
 
 	const {
@@ -42,7 +42,7 @@ export const AddToAlbum = (props) => {
 			return;
 		}
 
-		const base64Url = await urlToBase64(imageData.src.original);
+		const base64Url = await urlToBase64(imageStore.src.original);
 
 		const request = {
 			userId: userId,
@@ -52,8 +52,8 @@ export const AddToAlbum = (props) => {
 					albumTitle: name,
 					albumData: [
 						{
-							url: base64Url,
-							description: imageData.alt || '',
+							base64: base64Url,
+							description: imageStore.alt || '',
 							createdAt: new Date().toISOString()
 						}
 					]
@@ -82,8 +82,8 @@ export const AddToAlbum = (props) => {
 
 	async function addToCurrentAlbum(albumId, index) {
 		try {
-			const imageUrl = imageData.src.original;
-			const imageAlt = imageData.alt || '';
+			const imageUrl = imageStore.src.original;
+			const imageAlt = imageStore.alt || '';
 
 			const response = await fetch(imageUrl);
 			const blob = await response.blob();
@@ -94,7 +94,7 @@ export const AddToAlbum = (props) => {
 				albumId: albumId,
 				index: index,
 				image: {
-					url: base64Image,
+					base64: base64Image,
 					description: imageAlt,
 					createdAt: new Date().toISOString()
 				}
@@ -171,7 +171,7 @@ export const AddToAlbum = (props) => {
 											className={a.album}
 											key={album.index}
 											style={{
-												backgroundImage: `url(${albums[index].albumData[0].url})`,
+												backgroundImage: `url(${albums[index].albumData[0].base64})`,
 												backgroundSize: 'cover',
 												backgroundPosition: 'center',
 											}}

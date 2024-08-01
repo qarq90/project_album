@@ -1,47 +1,33 @@
 import {NextResponse} from "next/server";
 import connect from "@/lib/connection.js";
-import Tapes from "@/models/Tape.js";
+import Albums from "@/models/Album";
 
 export const POST = async (request) => {
 	try {
-		const {userId, tapes} = await request.json();
+		const {userId} = await request.json();
 
 		await connect();
 
-		const result = await Tapes.updateOne(
-			{
-				userId: userId
-			},
-			{
-				$push: {
-					tapes: {
-						$each: tapes
-					}
-				}
-			},
-			{
-				upsert: true
-			}
-		);
+		const result = await Albums.findOne({userId: userId});
 
 		if (result) {
 			return NextResponse.json({
-				message: 'Tape(s) Added Successfully',
+				message: 'Fetched albums successfully',
 				status: true,
-				result: result,
+				result: result
 			});
 		} else {
 			return NextResponse.json({
-				message: 'Failed to Add Tape(s)',
+				message: 'No albums found for the given userId',
 				status: false,
-				result: result,
+				result: result
 			});
 		}
 	} catch (error) {
 		console.log(error);
 		return NextResponse.json({
 			message: 'Error connecting to Database: ' + error,
-			result: false,
+			status: false
 		});
 	}
 };

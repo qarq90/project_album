@@ -3,12 +3,10 @@
 import s from "@/styles/globals.module.css"
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
-import {ImageGrid} from "@/components/ImageGrid";
-import {VideoGrid} from "@/components/VideoGrid";
 import {EmptySpace} from "@/components/ui/EmptySpace";
-import {SkeletonAlpha} from "@/components/SkeletonAlpha";
-import {useFetchUser} from "@/hooks/fetchUser";
-import {useFetchPage} from "@/hooks/fetchPage";
+import {useFetchUser} from "@/hooks/useFetchUser";
+import {GridImage} from "@/components/GridImage";
+import {GridVideo} from "@/components/GridVideo";
 
 export default function Page() {
 
@@ -16,33 +14,23 @@ export default function Page() {
 
 	const fetchUser = useFetchUser(router);
 
-	const {loading, page} = useFetchPage();
-
 	useEffect(() => {
 		fetchUser()
-	}, []);
+	}, [fetchUser]);
 
 	return (
 		<>
 			<div className={s.wrapper}>
-				{
-					loading ? <>
-						<span className={s.type}>IMAGES</span>
-						<EmptySpace/>
-						<ImageGrid page={page} url={`https://api.pexels.com/v1/curated?per_page=10`}/>
-						<EmptySpace/>
-						<span className={s.type}>VIDEOS</span>
-						<EmptySpace/>
-						<VideoGrid page={page} url={`https://api.pexels.com/videos/popular?per_page=10`}/>
-					</> : <>
-						<span className={s.type}>IMAGES</span>
-						<EmptySpace/>
-						<SkeletonAlpha/>
-						<span className={s.type}>VIDEOS</span>
-						<EmptySpace/>
-						<SkeletonAlpha/>
-					</>
-				}
+				<span className={s.type}>IMAGES</span>
+				<EmptySpace/>
+				<GridImage url={`https://api.pexels.com/v1/curated?per_page=4`}/>
+				<EmptySpace/>
+				<EmptySpace/>
+				<span className={s.type}>VIDEOS</span>
+				<EmptySpace/>
+				<GridVideo url={`https://api.pexels.com/videos/popular?per_page=4`}/>
+				<EmptySpace/>
+				<EmptySpace/>
 			</div>
 		</>
 	);

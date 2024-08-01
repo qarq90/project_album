@@ -1,19 +1,19 @@
-import {Input} from "@/components/ui/Input";
-import UserStore from "@/stores/UserStore";
-import {Label} from "@/components/ui/Label";
-import {Button} from "@/components/ui/Button";
-import {useEffect, useRef, useState} from "react";
 import p from "@/styles/profile/profile.module.css";
 import i from "@/styles/auth/auth.module.css";
+import UserStore from "@/stores/UserStore";
+import {slideIn} from "@/styles/animations/slide";
+import {emailRegex, phoneRegex} from "@/lib/helperAuth";
+import {AnimatePresence, motion} from 'framer-motion';
+import {useEffect, useRef, useState} from "react";
+import {Input} from "@/components/ui/Input";
+import {Label} from "@/components/ui/Label";
+import {Button} from "@/components/ui/Button";
 import {UploadIcon} from "../../public/icons/UploadIcon";
 import {Hint} from "@/components/ui/Hint";
-import {AnimatePresence, motion} from 'framer-motion';
-import {slideIn} from "@/styles/animations/slide";
 import {useRouter} from "next/navigation";
-import {useFetchUser} from "@/hooks/fetchUser";
-import {emailRegex, phoneRegex} from "@/lib/authHelper";
+import {useFetchUser} from "@/hooks/useFetchUser";
 
-export const Edit = (props) => {
+export const ProfileEdit = (props) => {
 
 	const router = useRouter();
 
