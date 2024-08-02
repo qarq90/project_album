@@ -4,34 +4,26 @@ export const handleDownload = async (downloadhref, type, name) => {
 	try {
 		const response = await axios.get(downloadhref, {
 			responseType: 'arraybuffer'
-		})
+		});
 
-		let mimeType;
-		if (type === 'image') {
-			mimeType = 'image/png';
-		} else if (type === 'video') {
-			mimeType = 'video/mp4';
-		} else {
-			throw new Error('Unsupported file type');
-		}
+		const mimeType = type === 'image' ? 'image/png' : type === 'video' ? 'video/mp4' : null;
+		if (!mimeType) throw new Error('Unsupported file type');
 
-		const file = new Blob([response.data], {type: mimeType})
-		const url = URL.createObjectURL(file)
-		const link = document.createElement("a")
+		const file = new Blob([response.data], {type: mimeType});
+		const url = URL.createObjectURL(file);
+		const link = document.createElement('a');
 
-		link.href = url
-		link.download = name
-		document.body.appendChild(link)
+		link.href = url;
+		link.download = name;
+		document.body.appendChild(link);
+		link.click();
 
-		link.click()
-		document.body.removeChild(link)
-
-		URL.revokeObjectURL(url)
-		link.remove()
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
 	} catch (error) {
-		console.error(`Error downloading ${type}:`, error)
+		console.error(`Error downloading ${type}:`, error);
 	}
-}
+};
 
 export function removeNumbersAndTrailingChars(str) {
 
