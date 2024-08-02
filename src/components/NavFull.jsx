@@ -6,15 +6,23 @@ import UserStore from "@/stores/UserStore";
 import {NavLeft, NavRight} from "@/lib/objNav";
 import {ModelIcon} from "../../public/icons/ModelIcon";
 import {UserIcon} from "../../public/icons/UserIcon";
+import {itemVariants} from "@/styles/animations/scale";
+import {motion} from "framer-motion";
 
 export const NavFull = () => {
 
 	return (
 		<>
-			<div className={s.nav}>
+			<motion.div
+				variants={itemVariants}
+				initial="hidden"
+				animate="visible"
+				transition={{type: 'spring', stiffness: 300}}
+				className={s.nav}
+			>
 				<Alpha/>
 				<Beta/>
-			</div>
+			</motion.div>
 		</>
 	);
 };
@@ -22,7 +30,11 @@ export const NavFull = () => {
 const Alpha = () => {
 	return (
 		<>
-			<div className={s.alpha}>
+			<motion.div
+				variants={itemVariants}
+				transition={{type: 'spring', stiffness: 300}}
+				className={s.alpha}
+			>
 				<Link href="/">
 					<ModelIcon
 						fill="var(--primary-theme-color)"
@@ -39,7 +51,7 @@ const Alpha = () => {
 						</div>
 					))
 				}
-			</div>
+			</motion.div>
 		</>
 	)
 }
@@ -52,7 +64,11 @@ const Beta = () => {
 
 	return (
 		<>
-			<div className={s.beta}>
+			<motion.div
+				variants={itemVariants}
+				transition={{type: 'spring', stiffness: 300}}
+				className={s.beta}
+			>
 				{
 					userPFP.length !== 0 ?
 						<>
@@ -79,7 +95,7 @@ const Beta = () => {
 						</div>
 					))
 				}
-			</div>
+			</motion.div>
 		</>
 	)
 }

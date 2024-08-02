@@ -5,6 +5,8 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {SearchIcon} from "../../public/icons/SearchIcon";
 import {RefreshIcon} from "../../public/icons/RefreshIcon";
+import {motion} from "framer-motion";
+import {itemVariants} from "@/styles/animations/scale";
 
 export const Searchbar = () => {
 
@@ -29,7 +31,13 @@ export const Searchbar = () => {
 
 	return (
 		<>
-			<div className={s.container}>
+			<motion.div
+				className={s.container}
+				variants={itemVariants}
+				initial="hidden"
+				animate="visible"
+				transition={{type: 'spring', stiffness: 300}}
+			>
 				<input
 					className={s.search}
 					type="text"
@@ -52,7 +60,7 @@ export const Searchbar = () => {
 					className={s.icon}
 					onClick={refreshHandler}
 				/>
-			</div>
+			</motion.div>
 		</>
 	);
 };
