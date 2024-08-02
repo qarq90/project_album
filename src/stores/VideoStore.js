@@ -7,6 +7,8 @@ const VideoStore = create((set) => ({
 	setVideoStore: (videos) => set((state) => ({
 		videoStore: [...state.videoStore, ...videos]
 	})),
+	videoFetcher: true,
+	setVideoFetcher: (videoFetcher) => set((state) => ({videoFetcher}))
 }));
 
 export default VideoStore;

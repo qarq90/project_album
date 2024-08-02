@@ -1,6 +1,4 @@
 .image {
-    /*height: 600px;*/
-    /*width: 100%;*/
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
@@ -35,12 +33,16 @@
     background-color: var(--primary-dark-color);
     outline: none;
     transition: 0.25s all ease-in-out;
+
+    &:hover {
+        scale: 0.95;
+        color: var(--primary-dark-color);
+        background-color: var(--primary-theme-color);
+    }
 }
 
-.select:hover {
-    scale: 0.95;
-    color: var(--primary-dark-color);
-    background-color: var(--primary-theme-color);
+.option {
+    text-align: center;
 }
 
 .bottomContainer {

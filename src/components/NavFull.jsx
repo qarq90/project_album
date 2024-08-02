@@ -56,13 +56,18 @@ const Beta = () => {
 				{
 					userPFP.length !== 0 ?
 						<>
-							<img className={s.img} src={userPFP} alt="pfp"/>
-						</> :
+							<Link href="/profile">
+								<img className={s.img} src={userPFP} alt="pfp"/>
+							</Link>
+						</>
+						:
 						<>
-							<UserIcon
-								fill="var(--primary-theme-color)"
-								className={s.img}
-							/>
+							<Link href="/profile">
+								<UserIcon
+									fill="var(--primary-theme-color)"
+									className={s.img}
+								/>
+							</Link>
 						</>
 				}
 				{

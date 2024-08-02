@@ -1,7 +1,7 @@
 "use client"
 
 import UserStore from "@/stores/UserStore";
-import p from "@/styles/profile/profile.module.css"
+import p from "@/styles/pages/profile/profile.module.css"
 import {Button} from "@/components/ui/Button";
 import {useEffect, useState} from "react";
 import {ProfileEdit} from "@/components/ProfileEdit";
@@ -49,7 +49,7 @@ export default function Page() {
 
 	return (
 		<>
-			<div className={p.profile + " " + (editing ? p.passive : "")}>
+			<div className={p.profileContainer}>
 				<div className={p.pfpContainer}>
 					{
 						userPFP.length !== 0 ?

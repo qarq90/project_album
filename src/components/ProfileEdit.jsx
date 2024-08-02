@@ -1,5 +1,5 @@
-import p from "@/styles/profile/profile.module.css";
-import i from "@/styles/auth/auth.module.css";
+import p from "@/styles/pages/profile/profile.module.css";
+import i from "@/styles/pages/auth/auth.module.css";
 import UserStore from "@/stores/UserStore";
 import {slideIn} from "@/styles/animations/slide";
 import {emailRegex, phoneRegex} from "@/lib/helperAuth";
@@ -34,6 +34,8 @@ export const ProfileEdit = (props) => {
 	const [newName, setName] = useState("");
 	const [newPhone, setPhone] = useState("");
 	const [newPFP, setPFP] = useState("");
+
+	const [pass,setPass] = useState(false)
 
 	useEffect(() => {
 		setEmail(userEmail);
@@ -131,9 +133,11 @@ export const ProfileEdit = (props) => {
 						<Input value={newEmail} type="text"/>
 						<Label text="Password"/>
 						<Input
-							value={newPassword}
+							value={pass ? newPassword : "************"}
 							type="text"
 							onChange={(e) => setPassword(e.target.value)}
+							onFocus={()=>setPass(true)}
+							onBlur={()=>setPass(false)}
 						/>
 						<Label text="Username"/>
 						<Input
@@ -163,7 +167,7 @@ export const ProfileEdit = (props) => {
 							<input
 								type="file"
 								id="img"
-								className={i.img}
+								className={i.image}
 								ref={fileInputRef}
 								onChange={handleImgUpload}
 							/>

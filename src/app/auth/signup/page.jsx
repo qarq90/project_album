@@ -1,18 +1,18 @@
 "use client"
 
-import {useEffect, useRef, useState} from "react";
-import {useRouter} from "next/navigation";
+import g from "@/styles/globals.module.css"
+import a from "@/styles/auth/auth.module.css"
+import Link from "next/link";
+import Cookies from "js-cookie";
+import {emailRegex, phoneRegex} from "@/lib/helperAuth";
+import {Hint} from "@/components/ui/Hint";
 import {Title} from "@/components/ui/Title";
 import {Label} from "@/components/ui/Label";
 import {Input} from "@/components/ui/Input";
-import {Hint} from "@/components/ui/Hint";
 import {Button} from "@/components/ui/Button";
-import s from "@/styles/globals.module.css"
-import i from "@/styles/auth/auth.module.css"
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {UploadIcon} from "../../../../public/icons/UploadIcon";
-import {emailRegex, phoneRegex} from "@/lib/helperAuth";
-import Cookies from "js-cookie";
+import {useEffect, useRef, useState} from "react";
 
 export default function Page() {
 
@@ -108,7 +108,7 @@ export default function Page() {
 
 	return (
 		<>
-			<div className={s.container}>
+			<div className={g.container}>
 				<Title text="Signup"/>
 				<Label text="Email"/>
 				<Input placeholder="deepthorat06@gmail.com"
@@ -140,7 +140,7 @@ export default function Page() {
 
 				<div>
 					<Label text="Profile Picture"/>
-					<div className={i.pfp}>
+					<div className={a.pfp}>
 						<Button
 							text={<><UploadIcon/> Upload Image</>}
 							onClick={handleFileButtonClick}
@@ -150,7 +150,7 @@ export default function Page() {
 					<input
 						type="file"
 						id="img"
-						className={i.img}
+						className={a.image}
 						ref={fileInputRef}
 						onChange={handleImgUpload}
 					/>

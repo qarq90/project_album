@@ -1,5 +1,7 @@
 export const containerVariants = {
-	hidden: {opacity: 1},
+	hidden: {
+		opacity: 1
+	},
 	visible: {
 		opacity: 1,
 		transition: {
@@ -9,6 +11,12 @@ export const containerVariants = {
 };
 
 export const itemVariants = {
-	hidden: {opacity: 0, scale: 0.8},
-	visible: {opacity: 1, scale: 1},
+	hidden: {
+		opacity: 0,
+		scale: 0.8
+	},
+	visible: {
+		opacity: 1,
+		scale: 1
+	},
 };

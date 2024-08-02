@@ -1,16 +1,16 @@
 "use client"
 
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import {Title} from "@/components/ui/Title";
-import {Label} from "@/components/ui/Label";
-import {Input} from "@/components/ui/Input";
-import {Hint} from "@/components/ui/Hint";
-import {Button} from "@/components/ui/Button";
-import s from "@/styles/globals.module.css"
+import g from "@/styles/globals.module.css"
 import Link from "next/link";
 import UserStore from "@/stores/UserStore";
 import Cookies from "js-cookie"
+import {Hint} from "@/components/ui/Hint";
+import {Title} from "@/components/ui/Title";
+import {Label} from "@/components/ui/Label";
+import {Input} from "@/components/ui/Input";
+import {Button} from "@/components/ui/Button";
+import {useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 
 export default function Page() {
 
@@ -78,7 +78,7 @@ export default function Page() {
 
 	return (
 		<>
-			<div className={s.container}>
+			<div className={g.container}>
 				<Title text="Login"/>
 				<Label text="Email"/>
 				<Input placeholder="deepthorat06@gmail.com"

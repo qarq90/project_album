@@ -1,13 +1,14 @@
 import {useEffect, useState} from "react";
 import {slideIn} from "@/styles/animations/slide";
-import a from "@/styles/components/add.module.css";
+import a from "@/styles/components/collections.module.css";
 import {AnimatePresence, motion} from "framer-motion";
 import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
 import UserStore from "@/stores/UserStore";
-import VideoStore from "@/stores/VideoStore";
 import {removeNameFromURL, urlToBase64} from "@/lib/helperFunctions";
+import VideoStore from "@/stores/VideoStore";
+import {SkeletonCharlie} from "@/components/SkeletonCharlie";
 
 export const AddToTape = (props) => {
 
@@ -16,12 +17,12 @@ export const AddToTape = (props) => {
 	const [tapes, setTapes] = useState(null);
 
 	const {
-		videoStore
-	} = VideoStore();
-
-	const {
 		userId
 	} = UserStore();
+
+	const {
+		setVideoFetcher
+	} = VideoStore();
 
 	function closeHandler() {
 		props.setOpenTape(false);
@@ -41,8 +42,9 @@ export const AddToTape = (props) => {
 			return;
 		}
 
-		const base64 = await urlToBase64(videoStore.image)
-		const videoAlt = removeNameFromURL(videoStore.url);
+		const base64 = await urlToBase64(props.video.image)
+		const videoAlt = removeNameFromURL(props.video.url);
+		const hdFile = props.video.video_files.find(file => file.quality === 'hd');
 
 		const request = {
 			userId: userId,
@@ -53,8 +55,11 @@ export const AddToTape = (props) => {
 					tapeData: [
 						{
 							base64: base64,
-							videoId: videoStore.id,
+							videoId: props.video.id,
+							url: hdFile.link,
 							description: videoAlt,
+							width: props.video.width,
+							height: props.video.height,
 							createdAt: new Date().toISOString()
 						}
 					]
@@ -74,6 +79,7 @@ export const AddToTape = (props) => {
 			const data = await response.json();
 
 			if (data.status) {
+				setVideoFetcher(true)
 				props.setOpenTape(false);
 			} else {
 				alert(data.message);
@@ -83,18 +89,22 @@ export const AddToTape = (props) => {
 		}
 	}
 
-	async function addToCurrentTape(tapeId, index) {
+	async function addToCurrentTape(tapeId) {
 		try {
-			const base64 = await urlToBase64(videoStore.image);
-			const videoAlt = removeNameFromURL(videoStore.url);
+			const base64 = await urlToBase64(props.video.image);
+			const videoAlt = removeNameFromURL(props.video.url);
+			const hdFile = props.video.video_files.find(file => file.quality === 'hd');
 
 			const request = {
 				userId: userId,
 				tapeId: tapeId,
 				video: {
 					base64: base64,
-					videoId: videoStore.id,
+					videoId: props.video.id,
+					url: hdFile.link,
 					description: videoAlt,
+					width: props.video.width,
+					height: props.video.height,
 					createdAt: new Date().toISOString()
 				}
 			};
@@ -110,6 +120,7 @@ export const AddToTape = (props) => {
 			const data = await res.json();
 
 			if (data.status) {
+				setVideoFetcher(true)
 				props.setOpenTape(false);
 			} else {
 				alert('Failed to add video to tape');
@@ -138,6 +149,7 @@ export const AddToTape = (props) => {
 					const data = await response.json();
 
 					if (data.status) {
+						setVideoFetcher(false)
 						setTapes(data.result.tapes);
 					}
 				} catch (e) {
@@ -145,8 +157,8 @@ export const AddToTape = (props) => {
 				}
 			}
 		};
-		fetchTapes();
-	}, [tapes, userId]);
+		fetchTapes().then(() => null);
+	}, [setVideoFetcher, tapes, userId]);
 
 	return (
 		<>
@@ -156,7 +168,7 @@ export const AddToTape = (props) => {
 					animate="animate"
 					exit="exit"
 					variants={slideIn}
-					className={a.add}
+					className={a.addContainer}
 				>
 					<Title text="Add To Tape"/>
 					<div className={a.albumGrid}>
@@ -188,6 +200,11 @@ export const AddToTape = (props) => {
 									<div className={a.album} onClick={openCreateHandler}>
 										Create a new tape
 									</div>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
 								</>
 							)}
 					</div>

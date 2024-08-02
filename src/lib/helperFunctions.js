@@ -1,14 +1,22 @@
 import axios from "axios";
 
-export const handleDownload = async (downloadhref, name) => {
+export const handleDownload = async (downloadhref, type, name) => {
 	try {
-
 		const response = await axios.get(downloadhref, {
 			responseType: 'arraybuffer'
 		})
 
-		const image = new Blob([response.data], {type: "image/png"})
-		const url = URL.createObjectURL(image)
+		let mimeType;
+		if (type === 'image') {
+			mimeType = 'image/png';
+		} else if (type === 'video') {
+			mimeType = 'video/mp4';
+		} else {
+			throw new Error('Unsupported file type');
+		}
+
+		const file = new Blob([response.data], {type: mimeType})
+		const url = URL.createObjectURL(file)
 		const link = document.createElement("a")
 
 		link.href = url
@@ -21,7 +29,7 @@ export const handleDownload = async (downloadhref, name) => {
 		URL.revokeObjectURL(url)
 		link.remove()
 	} catch (error) {
-		console.error('Error downloading image:', error)
+		console.error(`Error downloading ${type}:`, error)
 	}
 }
 

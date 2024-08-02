@@ -1,14 +1,13 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import s from "@/styles/image/image.module.css";
+import s from "@/styles/pages/slug/slug.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {blobToBase64, handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
+import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {AddToAlbum} from "@/components/AddToAlbum";
-import ImageStore from "@/stores/ImageStore";
 
 export default function Page({params}) {
 
@@ -17,11 +16,6 @@ export default function Page({params}) {
 	const [image, setImage] = useState(null);
 	const [resolution, setResolution] = useState("Original");
 	const [openAlbum, setOpenAlbum] = useState(false);
-
-	const {
-		setImageId,
-		setImageStore
-	} = ImageStore()
 
 	const router = useRouter();
 
@@ -47,50 +41,32 @@ export default function Page({params}) {
 			try {
 				const response = await fetch(url, options);
 				const data = await response.json();
-				setImageId(data.id)
-				setImageStore(data)
+				console.log(data)
 				setImage(data);
 			} catch (error) {
 				console.error('Error fetching the images:', error);
 			}
 		};
 
-		fetchImage().then(() => console.log("Image Fetched Successfully"));
+		fetchImage().then(() => null);
 
-	}, [setImageId, setImageStore, slug]);
+	}, [slug]);
 
-	const resolutionUrls = {
-		Landscape: image?.src.landscape,
-		Large: image?.src.large,
-		'2X Large': image?.src['2x_large'],
-		Medium: image?.src.medium,
-		Original: image?.src.original,
-		Portrait: image?.src.portrait,
-		Small: image?.src.small,
-		Tiny: image?.src.tiny,
-	};
+	const resolutionUrls = image?.src || {};
 
 	function downloadHandler() {
 		if (image && resolutionUrls[resolution]) {
 			let name = image.url ? image.url.split('/').pop() : 'download.png';
 			name = removeNumbersAndTrailingChars(name);
 
-			handleDownload(resolutionUrls[resolution], name).then(() => console.log("Downloading image"));
+			handleDownload(resolutionUrls[resolution], name).then(() => console.log("Downloading slug"));
 		} else {
-			console.log('No image available or resolution is not set.');
+			console.log('No slug available or resolution is not set.');
 		}
 	}
 
 	async function albumHandler() {
-		try {
-			const response = await fetch(image.src.original);
-			const blob = await response.blob();
-			const base64 = await blobToBase64(blob);
-			setOpenAlbum(true)
-			return base64;
-		} catch (error) {
-			console.error('Error converting image URL to base64:', error);
-		}
+		setOpenAlbum(true)
 	}
 
 	return (
@@ -110,14 +86,14 @@ export default function Page({params}) {
 								value={resolution}
 								onChange={(e) => setResolution(e.target.value)}
 							>
-								<option value="Landscape">Landscape</option>
-								<option value="Large">Large</option>
-								<option value="2X Large">2X Large</option>
-								<option value="Medium">Medium</option>
-								<option value="Original">Original</option>
-								<option value="Portrait">Portrait</option>
-								<option value="Small">Small</option>
-								<option value="Tiny">Tiny</option>
+								{Object.keys(resolutionUrls).map((quality) => {
+									const capitalizedQuality = quality.charAt(0).toUpperCase() + quality.slice(1).toLowerCase();
+									return (
+										<option key={quality} value={quality} className={s.option}>
+											{capitalizedQuality}
+										</option>
+									);
+								})}
 							</select>
 							<Button text="Download" onClick={downloadHandler}/>
 							<Button text="Add to Album" onClick={albumHandler}/>
@@ -127,7 +103,7 @@ export default function Page({params}) {
 					<p>Loading...</p>
 				)}
 			</div>
-			{openAlbum ? <AddToAlbum openAlbum={openAlbum} setOpenAlbum={setOpenAlbum}/> : null}
+			{openAlbum ? <AddToAlbum image={image} openAlbum={openAlbum} setOpenAlbum={setOpenAlbum}/> : null}
 		</>
 	);
 }

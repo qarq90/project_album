@@ -7,6 +7,8 @@ const ImageStore = create((set) => ({
 	setImageStore: (images) => set((state) => ({
 		imageStore: [...state.imageStore, ...images]
 	})),
+	imageFetcher: true,
+	setImageFetcher: (imageFetcher) => set((state) => ({imageFetcher}))
 }));
 
 export default ImageStore;

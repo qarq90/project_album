@@ -2,21 +2,11 @@
 
 import s from "@/styles/components/search.module.css";
 import {useState} from "react";
-import {usePathname, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {SearchIcon} from "../../public/icons/SearchIcon";
 import {RefreshIcon} from "../../public/icons/RefreshIcon";
-import {useFetchMedia} from "@/hooks/useFetchMedia";
-import ImageStore from "@/stores/ImageStore";
-import VideoStore from "@/stores/VideoStore";
 
 export const Searchbar = () => {
-	const pathname = usePathname();
-	let currentPage = '';
-
-	const {imageStore, setImageStore} = ImageStore();
-	const {videoStore, setVideoStore} = VideoStore();
-
-	const {refreshData} = useFetchMedia();
 
 	const router = useRouter();
 
@@ -35,27 +25,6 @@ export const Searchbar = () => {
 
 	const refreshHandler = async (e) => {
 		e.preventDefault();
-		switch (pathname) {
-			case '/images':
-				currentPage = 'images';
-				setImageStore([])
-				await refreshData(currentPage).then(() => console.log("Refreshed"));
-				console.log(imageStore)
-				break;
-			case '/videos':
-				currentPage = 'videos';
-				setVideoStore([])
-				await refreshData(currentPage).then(() => console.log("Refreshed"));
-				break;
-			case '/':
-				currentPage = 'home';
-				setImageStore([])
-				setVideoStore([])
-				await refreshData(currentPage).then(() => console.log("Refreshed"));
-				break;
-			default:
-				break
-		}
 	};
 
 	return (

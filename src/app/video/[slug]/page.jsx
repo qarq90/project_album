@@ -1,13 +1,12 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import s from "@/styles/image/image.module.css";
+import s from "@/styles/pages/slug/slug.module.css";
 import g from "@/styles/globals.module.css";
 import {Button} from "@/components/ui/Button";
-import {blobToBase64, handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
+import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctions";
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {useRouter} from "next/navigation";
-import VideoStore from "@/stores/VideoStore";
 import {AddToTape} from "@/components/AddToTape";
 
 export default function Page({params}) {
@@ -17,11 +16,6 @@ export default function Page({params}) {
 	const [video, setVideo] = useState(null);
 	const [resolution, setResolution] = useState("Original");
 	const [openTape, setOpenTape] = useState(false);
-
-	const {
-		setVideoId,
-		setVideoStore
-	} = VideoStore()
 
 	const router = useRouter();
 
@@ -47,16 +41,14 @@ export default function Page({params}) {
 				const response = await fetch(url, options);
 				const data = await response.json();
 				setVideo(data);
-				setVideoId(data.id);
-				setVideoStore(data)
 			} catch (error) {
 				console.error('Error fetching the video:', error);
 			}
 		};
 
-		fetchVideo().then(() => console.log("Video Fetched Successfully"));
+		fetchVideo().then(() => null);
 
-	}, [setVideoId, setVideoStore, slug]);
+	}, [slug]);
 
 	const resolutionUrls = video?.video_files.reduce((acc, file) => {
 		acc[file.quality] = file.link;
@@ -75,16 +67,10 @@ export default function Page({params}) {
 	}
 
 	async function albumHandler() {
-		try {
-			const response = await fetch(video.video_files[1].link);
-			const blob = await response.blob();
-			const base64 = await blobToBase64(blob);
-			setOpenTape(true);
-			return base64;
-		} catch (error) {
-			console.error('Error converting video URL to base64:', error);
-		}
+		setOpenTape(true);
 	}
+
+	const hdFile = video?.video_files.find(file => file.quality === 'hd');
 
 	return (
 		<>
@@ -93,7 +79,7 @@ export default function Page({params}) {
 					<>
 						<video
 							className={s.video}
-							src={video.video_files[1].link}
+							src={hdFile.link}
 							controls
 							poster={video.image}
 							width={video.width}
@@ -108,20 +94,20 @@ export default function Page({params}) {
 								onChange={(e) => setResolution(e.target.value)}
 							>
 								{Object.keys(resolutionUrls).map((quality) => (
-									<option key={quality} value={quality}>
+									<option className={s.option} key={quality} value={quality}>
 										{quality.toUpperCase()}
 									</option>
 								))}
 							</select>
 							<Button text="Download" onClick={downloadHandler}/>
-							<Button text="Add to Album" onClick={albumHandler}/>
+							<Button text="Add to Tape" onClick={albumHandler}/>
 						</div>
 					</>
 				) : (
 					<p>Loading...</p>
 				)}
 			</div>
-			{openTape ? <AddToTape openTape={openTape} setOpenTape={setOpenTape}/> : null}
+			{openTape ? <AddToTape video={video} openTape={openTape} setOpenTape={setOpenTape}/> : null}
 		</>
 	);
 }

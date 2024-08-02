@@ -23,7 +23,7 @@
     left: -150%;
     height: 100%;
     width: 150%;
-    background: linear-gradient(to right, transparent 0%, var(--primary-theme-color) 20%, transparent 100%);
+    background: linear-gradient(to right, transparent 50%, var(--primary-theme-color) 100%, transparent 50%);
     animation: shimmer 2s infinite;
 }
 
@@ -87,6 +87,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+    margin-bottom: 24px;
 }
 
 .skeleton {
@@ -98,7 +99,18 @@
     border-radius: 8px;
 }
 
-.skeleton::before {
+.skeletonTitle {
+    width: 30%;
+    height: 75px;
+    background: var(--primary-dark-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.skeleton::before, .skeletonTitle::before, .skeletonSingle::before {
     content: "";
     display: block;
     position: absolute;
@@ -106,8 +118,20 @@
     left: -150%;
     height: 100%;
     width: 150%;
-    background: linear-gradient(to right, transparent 0%, var(--primary-theme-color) 20%, transparent 100%);
+    margin-bottom: 24px;
+    background: linear-gradient(to right, transparent 50%, var(--primary-theme-color) 100%, transparent 50%);
     animation: shimmer 2s infinite;
+}
+
+.skeletonSingle {
+    width: auto;
+    height: 200px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    background: var(--primary-dark-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
 }
 
 @keyframes shimmer {

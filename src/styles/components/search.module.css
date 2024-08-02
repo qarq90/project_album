@@ -16,11 +16,11 @@
     box-shadow: 4px 4px 4px 0 var(--box-shadow-color);
     background-color: var(--primary-dark-color);
     transition: 0.25s all ease-in-out;
-}
 
-.search:focus {
-    color: var(--primary-dark-color);
-    background-color: var(--primary-theme-color);
+    &:focus {
+        color: var(--primary-dark-color);
+        background-color: var(--primary-theme-color);
+    }
 }
 
 .icon {

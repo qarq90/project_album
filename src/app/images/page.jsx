@@ -9,7 +9,6 @@ import {useEffect} from "react";
 
 export default function Page() {
 
-
 	const router = useRouter();
 
 	const fetchUser = useFetchUser(router);
@@ -21,7 +20,7 @@ export default function Page() {
 	return (
 		<>
 			<div className={s.wrapper}>
-				<GridImage url={`https://api.pexels.com/v1/curated?per_page=4`}/>
+				<GridImage isHome={false} url={`https://api.pexels.com/v1/curated?per_page=8`}/>
 				<EmptySpace/>
 			</div>
 		</>

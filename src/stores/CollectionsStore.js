@@ -1,9 +1,9 @@
 import create from 'zustand';
 
 const CollectionsStore = create((set) => ({
-	albumsStore: null,
+	albumsStore: [],
 	setAlbumsStore: (albumsStore) => set(() => ({albumsStore})),
-	tapesStore: null,
+	tapesStore: [],
 	setTapesStore: (tapesStore) => set(() => ({tapesStore})),
 }));
 

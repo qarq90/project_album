@@ -20,7 +20,7 @@ export default function Page() {
 	return (
 		<>
 			<div className={s.wrapper}>
-				<GridVideo url={`https://api.pexels.com/videos/popular?per_page=4`}/>
+				<GridVideo isHome={false} url={`https://api.pexels.com/videos/popular?per_page=6`}/>
 				<EmptySpace/>
 			</div>
 		</>

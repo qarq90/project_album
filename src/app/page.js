@@ -15,20 +15,18 @@ export default function Page() {
 	const fetchUser = useFetchUser(router);
 
 	useEffect(() => {
-		fetchUser()
+		fetchUser().then(() => null)
 	}, [fetchUser]);
 
 	return (
 		<>
 			<div className={s.wrapper}>
-				<span className={s.type}>IMAGES</span>
 				<EmptySpace/>
-				<GridImage url={`https://api.pexels.com/v1/curated?per_page=4`}/>
+				<GridImage isHome={true} search={false} url={`https://api.pexels.com/v1/curated?per_page=6`}/>
 				<EmptySpace/>
 				<EmptySpace/>
-				<span className={s.type}>VIDEOS</span>
 				<EmptySpace/>
-				<GridVideo url={`https://api.pexels.com/videos/popular?per_page=4`}/>
+				<GridVideo isHome={true} search={false} url={`https://api.pexels.com/videos/popular?per_page=6`}/>
 				<EmptySpace/>
 				<EmptySpace/>
 			</div>

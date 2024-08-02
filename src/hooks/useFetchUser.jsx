@@ -1,6 +1,9 @@
 import Cookies from "js-cookie";
 import UserStore from "@/stores/UserStore";
 import {useCallback} from "react";
+import CollectionsStore from "@/stores/CollectionsStore";
+import VideoStore from "@/stores/VideoStore";
+import ImageStore from "@/stores/ImageStore";
 
 export const useFetchUser = (router) => {
 
@@ -13,6 +16,21 @@ export const useFetchUser = (router) => {
 		setUserPhone,
 		setUserPFP,
 	} = UserStore();
+
+	const {
+		setAlbumsStore,
+		setTapesStore,
+	} = CollectionsStore();
+
+	const {
+		imageFetcher,
+		setImageFetcher
+	} = ImageStore();
+
+	const {
+		videoFetcher,
+		setVideoFetcher
+	} = VideoStore();
 
 	const fetchUser = useCallback(async () => {
 		const storageUserID = Cookies.get("storageUserID") || "";
@@ -43,6 +61,46 @@ export const useFetchUser = (router) => {
 					setUserPFP(data.result.pfp);
 
 					return data.result
+				} catch (e) {
+					console.log(e);
+				}
+
+				const mediaRequest = {userId: userId};
+
+				try {
+					const response = await fetch("/api/post/collections/albums", {
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						body: JSON.stringify(mediaRequest),
+					});
+
+					const data = await response.json();
+
+					if (data.status) {
+						setAlbumsStore(data.result.albums);
+						setImageFetcher(false)
+					} else {
+						console.log(data.message);
+					}
+				} catch (e) {
+					console.log(e);
+				}
+
+				try {
+					const response = await fetch("/api/post/collections/tapes", {
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						body: JSON.stringify(mediaRequest),
+					});
+
+					const data = await response.json();
+
+					if (data.status) {
+						setTapesStore(data.result.tapes);
+						setVideoFetcher(false)
+					} else {
+						console.log(data.message);
+					}
 				} catch (e) {
 					console.log(e);
 				}

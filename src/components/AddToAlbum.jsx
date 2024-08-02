@@ -1,5 +1,4 @@
-import a from "@/styles/components/add.module.css";
-import ImageStore from "@/stores/ImageStore";
+import c from "@/styles/components/collections.module.css";
 import UserStore from "@/stores/UserStore";
 import {slideIn} from "@/styles/animations/slide";
 import {AnimatePresence, motion} from "framer-motion";
@@ -8,6 +7,8 @@ import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
 import {urlToBase64} from "@/lib/helperFunctions";
+import ImageStore from "@/stores/ImageStore";
+import {SkeletonCharlie} from "@/components/SkeletonCharlie";
 
 export const AddToAlbum = (props) => {
 
@@ -16,12 +17,13 @@ export const AddToAlbum = (props) => {
 	const [albums, setAlbums] = useState(null);
 
 	const {
-		imageStore
-	} = ImageStore()
-
-	const {
 		userId
 	} = UserStore()
+
+	const {
+		imageFetcher,
+		setImageFetcher
+	} = ImageStore();
 
 	function closeHandler() {
 		props.setOpenAlbum(false);
@@ -38,11 +40,11 @@ export const AddToAlbum = (props) => {
 	async function createHandler() {
 
 		if (name === "") {
-			alert("Please enter name");
+			alert("Please enter an album name...");
 			return;
 		}
 
-		const base64Url = await urlToBase64(imageStore.src.original);
+		const base64Url = await urlToBase64(props.image.src.medium);
 
 		const request = {
 			userId: userId,
@@ -53,7 +55,10 @@ export const AddToAlbum = (props) => {
 					albumData: [
 						{
 							base64: base64Url,
-							description: imageStore.alt || '',
+							imageId: props.image.id,
+							description: props.image.alt || '',
+							width: props.image.width,
+							height: props.image.height,
 							createdAt: new Date().toISOString()
 						}
 					]
@@ -71,6 +76,7 @@ export const AddToAlbum = (props) => {
 			const data = await response.json();
 
 			if (data.status) {
+				setImageFetcher(true)
 				props.setOpenAlbum(false)
 			} else {
 				alert(data.message)
@@ -82,20 +88,19 @@ export const AddToAlbum = (props) => {
 
 	async function addToCurrentAlbum(albumId, index) {
 		try {
-			const imageUrl = imageStore.src.original;
-			const imageAlt = imageStore.alt || '';
 
-			const response = await fetch(imageUrl);
-			const blob = await response.blob();
-			const base64Image = await urlToBase64(blob);
+			const base64Url = await urlToBase64(props.image.src.medium);
 
 			const request = {
 				userId: userId,
 				albumId: albumId,
 				index: index,
 				image: {
-					base64: base64Image,
-					description: imageAlt,
+					base64: base64Url,
+					imageId: props.image.id,
+					description: props.image.alt || '',
+					width: props.image.width,
+					height: props.image.height,
 					createdAt: new Date().toISOString()
 				}
 			};
@@ -111,9 +116,10 @@ export const AddToAlbum = (props) => {
 			const data = await res.json();
 
 			if (data.status) {
+				setImageFetcher(true)
 				props.setOpenAlbum(false)
 			} else {
-				alert('Failed to add image to album');
+				alert('Failed to add slug to album');
 			}
 		} catch (e) {
 			console.log(e)
@@ -137,15 +143,17 @@ export const AddToAlbum = (props) => {
 					const data = await response.json();
 
 					if (data.status) {
+						setImageFetcher(false)
 						setAlbums(data.result.albums)
 					}
+					console.log(data)
 				} catch (e) {
 					console.log(e)
 				}
 			}
 		}
-		fetchAlbums()
-	}, [albums, userId])
+		fetchAlbums().then(() => null)
+	}, [albums, setImageFetcher, userId])
 
 	return (
 		<>
@@ -155,56 +163,69 @@ export const AddToAlbum = (props) => {
 					animate="animate"
 					exit="exit"
 					variants={slideIn}
-					className={a.add}
+					className={c.addContainer}
 				>
 					<Title text="Add To Album"/>
-					<div className={a.albumGrid}>
+					<div className={c.albumGrid}>
 						{
 							albums !== null
 								?
 								<>
-									<div className={a.album} onClick={openCreateHandler}>
-										Create a new album
+									<div className={c.album} onClick={openCreateHandler}>
+										Create a new tape
 									</div>
-									{albums.map((album, index) => (
-										<div
-											className={a.album}
-											key={album.index}
-											style={{
-												backgroundImage: `url(${albums[index].albumData[0].base64})`,
-												backgroundSize: 'cover',
-												backgroundPosition: 'center',
-											}}
-											onClick={() => addToCurrentAlbum(albums[index].albumId, index)}
-										>
-											<p className={a.albumName}>{album.albumTitle}</p>
-										</div>
-									))}
-								</> : <div className={a.album} onClick={openCreateHandler}>
-									Create a new album
-								</div>
+									{
+										albums.map((album, index) => (
+											<div
+												className={c.album}
+												key={album.index}
+												style={{
+													backgroundImage: `url(${albums[index].albumData[0].base64})`,
+													backgroundSize: 'cover',
+													backgroundPosition: 'center',
+												}}
+												onClick={() => addToCurrentAlbum(albums[index].albumId, index)}
+											>
+												<p className={c.albumName}>{album.albumTitle}</p>
+											</div>
+										))
+									}
+								</> :
+								<>
+									<div className={c.album} onClick={openCreateHandler}>
+										Create a new tape
+									</div>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+								</>
 						}
 					</div>
-					<div className={a.btnContainer}>
+					<div className={c.btnContainer}>
 						<Button text="Close" onClick={closeHandler}/>
 					</div>
 				</motion.div>
-				{create ? <>
-					<motion.div
-						initial="initial"
-						animate="animate"
-						exit="exit"
-						variants={slideIn}
-						className={a.name}
-					>
-						<Title text="New Album"/>
-						<Input placeholder="Enter album name..." onChange={(e) => setName(e.target.value)}/>
-						<div className={a.btnContainer}>
-							<Button text="Cancel" onClick={cancelHandler}/>
-							<Button text="Create" onClick={createHandler}/>
-						</div>
-					</motion.div>
-				</> : null}
+				{
+					create ?
+						<>
+							<motion.div
+								initial="initial"
+								animate="animate"
+								exit="exit"
+								variants={slideIn}
+								className={c.name}
+							>
+								<Title text="New Album"/>
+								<Input placeholder="Enter album name..." onChange={(e) => setName(e.target.value)}/>
+								<div className={c.btnContainer}>
+									<Button text="Cancel" onClick={cancelHandler}/>
+									<Button text="Create" onClick={createHandler}/>
+								</div>
+							</motion.div>
+						</> : null
+				}
 			</AnimatePresence>
 		</>
 	)

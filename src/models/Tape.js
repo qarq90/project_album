@@ -11,9 +11,21 @@ const VideoSchema = new Schema({
 		type: String,
 		required: true
 	},
+	url: {
+		type: String,
+		required: true
+	},
 	description: {
 		type: String,
 		default: ''
+	},
+	width: {
+		type: Number,
+		required: true
+	},
+	height: {
+		type: Number,
+		required: true
 	},
 	createdAt: {
 		type: Date,
