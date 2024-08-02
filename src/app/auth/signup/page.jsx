@@ -1,7 +1,7 @@
 "use client"
 
 import g from "@/styles/globals.module.css"
-import a from "@/styles/auth/auth.module.css"
+import a from "@/styles/pages/auth/auth.module.css"
 import Link from "next/link";
 import Cookies from "js-cookie";
 import {emailRegex, phoneRegex} from "@/lib/helperAuth";
