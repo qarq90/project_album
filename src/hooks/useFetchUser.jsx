@@ -106,7 +106,7 @@ export const useFetchUser = (router) => {
 				}
 			}
 		}
-	}, [router, userId, setUserId, setUserEmail, setUserPass, setUserName, setUserPhone, setUserPFP]);
+	}, [router, userId, setUserId, setUserEmail, setUserPass, setUserName, setUserPhone, setUserPFP, setAlbumsStore, setImageFetcher, setTapesStore, setVideoFetcher]);
 
 	return fetchUser;
 };

@@ -1,26 +1,38 @@
 import {NextResponse} from "next/server";
 import connect from "@/lib/connection.js";
-import Tapes from "@/models/Tape.js";
+import Albums from "@/models/Album.js";
 
 export const POST = async (request) => {
 	try {
-		const {userId} = await request.json();
+		const {userId, albumId, image} = await request.json();
 
 		await connect();
 
-		const result = await Tapes.findOne({userId: userId});
+		const result = await Albums.findOneAndUpdate(
+			{
+				userId: userId,
+				"albums.albumId": albumId
+			},
+			{
+				$push: {
+					"albums.$.albumData": image
+				}
+			},
+			{
+				new: true
+			}
+		);
 
 		if (result) {
 			return NextResponse.json({
-				message: 'Fetched tapes successfully',
+				message: 'Cell added to album successfully',
 				status: true,
 				result: result
 			});
 		} else {
 			return NextResponse.json({
-				message: 'No tapes found for the given userId',
-				status: false,
-				result: result
+				message: 'Cell failed to be added to album',
+				status: false
 			});
 		}
 	} catch (error) {

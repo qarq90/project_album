@@ -4,7 +4,7 @@ import Albums from "@/models/Album.js";
 
 export const POST = async (request) => {
 	try {
-		const {userId, albumId, image} = await request.json();
+		const {userId, albumId, imageId} = await request.json();
 
 		await connect();
 
@@ -14,8 +14,8 @@ export const POST = async (request) => {
 				"albums.albumId": albumId
 			},
 			{
-				$push: {
-					"albums.$.albumData": image
+				$pull: {
+					"albums.$.albumData": { imageId: imageId }
 				}
 			},
 			{
@@ -25,13 +25,13 @@ export const POST = async (request) => {
 
 		if (result) {
 			return NextResponse.json({
-				message: 'Image added to album successfully',
+				message: 'Image removed from album successfully',
 				status: true,
 				result: result
 			});
 		} else {
 			return NextResponse.json({
-				message: 'Image failed to be added to album',
+				message: 'Image failed to be removed from album',
 				status: false
 			});
 		}

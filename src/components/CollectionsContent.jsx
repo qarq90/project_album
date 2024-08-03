@@ -7,7 +7,7 @@ import {FaTrashCan} from "react-icons/fa6";
 import {FaDownload} from "react-icons/fa";
 import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 
-export const GridCollection = (props) => {
+export const CollectionsGrid = (props) => {
 	const downloadMedia = (url, type, name) => {
 		name.length === 0 ? name = "snapshots_download" : name;
 		if (type === "video") {
