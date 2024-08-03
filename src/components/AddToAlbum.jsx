@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
-import {urlToBase64} from "@/lib/helperFunctions";
 import ImageStore from "@/stores/ImageStore";
 import {SkeletonCharlie} from "@/components/SkeletonCharlie";
 
@@ -15,13 +14,13 @@ export const AddToAlbum = (props) => {
 	const [create, setCreate] = useState(false);
 	const [name, setName] = useState("");
 	const [albums, setAlbums] = useState(null);
+	const [loading, setLoading] = useState(true);
 
 	const {
 		userId
 	} = UserStore()
 
 	const {
-		imageFetcher,
 		setImageFetcher
 	} = ImageStore();
 
@@ -37,66 +36,64 @@ export const AddToAlbum = (props) => {
 		setCreate(false)
 	}
 
-	async function createHandler() {
+	async function createHandler(e) {
 
-		if (name === "") {
-			alert("Please enter an album name...");
-			return;
-		}
-
-		const base64Url = await urlToBase64(props.image.src.medium);
-
-		const request = {
-			userId: userId,
-			albums: [
-				{
-					albumId: new Date().getTime().toString(),
-					albumTitle: name,
-					albumData: [
-						{
-							base64: base64Url,
-							imageId: props.image.id,
-							description: props.image.alt || '',
-							width: props.image.width,
-							height: props.image.height,
-							createdAt: new Date().toISOString()
-						}
-					]
-				}
-			]
-		};
-
-		try {
-			const response = await fetch('/api/post/album/create', {
-				method: 'POST', headers: {
-					'Content-Type': 'application/json',
-				}, body: JSON.stringify(request),
-			});
-
-			const data = await response.json();
-
-			if (data.status) {
-				setImageFetcher(true)
-				props.setOpenAlbum(false)
-			} else {
-				alert(data.message)
+		if (e.type === "keydown" && e.key === "Enter" || e.type === "click") {
+			if (name === "") {
+				alert("Please enter an album name...");
+				return;
 			}
-		} catch (e) {
-			console.log(e)
+
+			const request = {
+				userId: userId,
+				albums: [
+					{
+						albumId: new Date().getTime().toString(),
+						albumTitle: name,
+						albumData: [
+							{
+								url: props.image.src.original,
+								imageId: props.image.id,
+								description: props.image.alt || '',
+								width: props.image.width,
+								height: props.image.height,
+								createdAt: new Date().toISOString()
+							}
+						]
+					}
+				]
+			};
+
+			try {
+				const response = await fetch('/api/post/collections/albums/create', {
+					method: 'POST', headers: {
+						'Content-Type': 'application/json',
+					}, body: JSON.stringify(request),
+				});
+
+				const data = await response.json();
+
+				if (data.status) {
+					setImageFetcher(true)
+					props.setOpenAlbum(false)
+				} else {
+					alert(data.message)
+				}
+			} catch (e) {
+				console.log(e)
+			}
 		}
 	}
 
 	async function addToCurrentAlbum(albumId, index) {
 		try {
 
-			const base64Url = await urlToBase64(props.image.src.medium);
-
 			const request = {
 				userId: userId,
 				albumId: albumId,
 				index: index,
 				image: {
-					base64: base64Url,
+					url: props.image.src.original,
 					imageId: props.image.id,
 					description: props.image.alt || '',
 					width: props.image.width,
@@ -105,7 +102,7 @@ export const AddToAlbum = (props) => {
 				}
 			};
 
-			const res = await fetch('/api/post/album/add', {
+			const res = await fetch('/api/post/collections/albums/add', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -134,7 +131,7 @@ export const AddToAlbum = (props) => {
 
 			if (albums === null) {
 				try {
-					const response = await fetch('/api/post/album/fetch', {
+					const response = await fetch('/api/post/collections/albums/fetch', {
 						method: 'POST', headers: {
 							'Content-Type': 'application/json',
 						}, body: JSON.stringify(request),
@@ -146,13 +143,13 @@ export const AddToAlbum = (props) => {
 						setImageFetcher(false)
 						setAlbums(data.result.albums)
 					}
-					console.log(data)
 				} catch (e) {
 					console.log(e)
 				}
 			}
 		}
 		fetchAlbums().then(() => null)
+		setLoading(false)
 	}, [albums, setImageFetcher, userId])
 
 	return (
@@ -180,7 +177,7 @@ export const AddToAlbum = (props) => {
 												className={c.album}
 												key={album.index}
 												style={{
-													backgroundImage: `url(${albums[index].albumData[0].base64})`,
+													backgroundImage: `url(${albums[index].albumData[0].url})`,
 													backgroundSize: 'cover',
 													backgroundPosition: 'center',
 												}}
@@ -195,11 +192,16 @@ export const AddToAlbum = (props) => {
 									<div className={c.album} onClick={openCreateHandler}>
 										Create a new tape
 									</div>
-									<SkeletonCharlie/>
-									<SkeletonCharlie/>
-									<SkeletonCharlie/>
-									<SkeletonCharlie/>
-									<SkeletonCharlie/>
+									{
+										!loading ?
+											<>
+												<SkeletonCharlie/>
+												<SkeletonCharlie/>
+												<SkeletonCharlie/>
+												<SkeletonCharlie/>
+												<SkeletonCharlie/>
+											</> : <></>
+									}
 								</>
 						}
 					</div>
@@ -218,7 +220,8 @@ export const AddToAlbum = (props) => {
 								className={c.name}
 							>
 								<Title text="New Album"/>
-								<Input placeholder="Enter album name..." onChange={(e) => setName(e.target.value)}/>
+								<Input placeholder="Enter album name..." onKeyDown={createHandler}
+								       onChange={(e) => setName(e.target.value)}/>
 								<div className={c.btnContainer}>
 									<Button text="Cancel" onClick={cancelHandler}/>
 									<Button text="Create" onClick={createHandler}/>

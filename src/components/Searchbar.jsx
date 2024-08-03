@@ -2,32 +2,63 @@
 
 import s from "@/styles/components/search.module.css";
 import {useState} from "react";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {SearchIcon} from "../../public/icons/SearchIcon";
 import {RefreshIcon} from "../../public/icons/RefreshIcon";
 import {motion} from "framer-motion";
 import {itemVariants} from "@/styles/animations/scale";
+import {ClearIcon} from "../../public/icons/ClearIcon";
 
 export const Searchbar = () => {
 
 	const router = useRouter();
 
+	const pathname = usePathname()
+
 	const [search, setSearch] = useState("");
 	const [searchHover, setSearchHover] = useState(false);
 	const [refreshHover, setRefreshHover] = useState(false);
+	const [clearHover, setClearHover] = useState(false);
 
 	const searchHandler = (e) => {
-		if (e.type === 'keydown' && e.key === 'Enter') {
+		if (e.type === "keydown" && e.key === "Enter") {
 			e.preventDefault();
 			router.push(`/search/${search}`);
-		} else if (e.type === 'click') {
+		} else if (e.type === "click") {
 			router.push(`/search/${search}`);
 		}
 	};
 
 	const refreshHandler = async (e) => {
 		e.preventDefault();
+		console.log(pathname)
 	};
+
+	const clearHandler = (e) => {
+		e.preventDefault();
+		setSearch("");
+	};
+
+	const icons = [
+		{
+			component: SearchIcon,
+			hover: searchHover,
+			setHover: setSearchHover,
+			onClick: searchHandler,
+		},
+		{
+			component: ClearIcon,
+			hover: clearHover,
+			setHover: setClearHover,
+			onClick: clearHandler,
+		},
+		{
+			component: RefreshIcon,
+			hover: refreshHover,
+			setHover: setRefreshHover,
+			onClick: refreshHandler,
+		},
+	];
 
 	return (
 		<>
@@ -36,7 +67,7 @@ export const Searchbar = () => {
 				variants={itemVariants}
 				initial="hidden"
 				animate="visible"
-				transition={{type: 'spring', stiffness: 300}}
+				transition={{type: "spring", stiffness: 300}}
 			>
 				<input
 					className={s.search}
@@ -46,20 +77,25 @@ export const Searchbar = () => {
 					onKeyDown={searchHandler}
 					placeholder="Search for stunning free images and videos to inspire your projects..."
 				/>
-				<SearchIcon
-					onMouseLeave={() => setSearchHover(false)}
-					onMouseEnter={() => setSearchHover(true)}
-					fill={searchHover ? "var(--primary-dark-color)" : "var(--primary-theme-color)"}
-					className={s.icon}
-					onClick={searchHandler}
-				/>
-				<RefreshIcon
-					onMouseLeave={() => setRefreshHover(false)}
-					onMouseEnter={() => setRefreshHover(true)}
-					fill={refreshHover ? "var(--primary-dark-color)" : "var(--primary-theme-color)"}
-					className={s.icon}
-					onClick={refreshHandler}
-				/>
+				{
+					icons.map((icon, index) => {
+						const IconComponent = icon.component;
+						return (
+							<IconComponent
+								key={index}
+								onMouseLeave={() => icon.setHover(false)}
+								onMouseEnter={() => icon.setHover(true)}
+								fill={
+									icon.hover
+										? "var(--primary-dark-color)"
+										: "var(--primary-theme-color)"
+								}
+								className={s.icon}
+								onClick={icon.onClick}
+							/>
+						);
+					})
+				}
 			</motion.div>
 		</>
 	);

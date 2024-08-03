@@ -1,21 +1,21 @@
 import {NextResponse} from "next/server";
 import connect from "@/lib/connection.js";
-import Albums from "@/models/Album.js";
+import Tapes from "@/models/Tape";
 
 export const POST = async (request) => {
 	try {
-		const {userId, albumId, imageId} = await request.json();
+		const {userId, tapeId, videoId} = await request.json();
 
 		await connect();
 
-		const result = await Albums.findOneAndUpdate(
+		const result = await Tapes.findOneAndUpdate(
 			{
 				userId: userId,
-				"albums.albumId": albumId
+				"tapes.tapeId": tapeId
 			},
 			{
 				$pull: {
-					"albums.$.albumData": { imageId: imageId }
+					"tapes.$.tapeId": {videoId: videoId}
 				}
 			},
 			{

@@ -1,46 +1,4 @@
 
-.collectionGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
-    gap: 16px;
-    margin: 8px 0 32px;
-}
-
-.collectionItem {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    flex-direction: column;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border-radius: 8px;
-    height: 200px;
-    width: auto;
-    transition: 0.25s all ease-in-out;
-}
-
-.collectionItem:hover {
-    cursor: pointer;
-    scale: 0.95;
-}
-
-.collectionName {
-    border-radius: 4px;
-    backdrop-filter: blur(12px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    padding: 0.75rem;
-    height: 1.5rem;
-    font-size: 1.75rem;
-    color: var(--box-shadow-color);
-    text-shadow: 2px 2px var(--primary-theme-color);
-}
-
-/*-------------------------------------------------*/
-
 .container {
     display: flex;
     flex-direction: column;
@@ -62,13 +20,13 @@
 
 .imageGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
 
 .videoGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
 }
 
@@ -79,13 +37,9 @@
     margin-bottom: 24px;
 }
 
-.portrait {
-    grid-column: span 1;
-    grid-row: span 2;
-}
-
-.landscape {
-    grid-column: span 2;
+.gridColumns {
+    display: flex;
+    flex-direction: column;
 }
 
 .square {
@@ -93,9 +47,14 @@
     grid-row: span 1;
 }
 
-.panorama {
-    grid-column: span 3;
+.portrait {
+    grid-column: span 1;
     grid-row: span 2;
+}
+
+.panorama {
+    grid-column: span 1;
+    grid-row: span 3;
 }
 
 .cell {
@@ -171,4 +130,44 @@
         color: var(--primary-dark-color);
         background-color: var(--primary-theme-color);
     }
+}
+
+.collection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 10px;
+    background-color: var(--primary-dark-color);
+    box-shadow: 6px 6px 5px #111111;
+    height: 300px;
+    color: white;
+    text-decoration: none;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    transition: 0.25s all ease-in-out;
+
+    &:hover {
+        scale: 0.95;
+    }
+}
+
+.collectionName {
+    position: absolute;
+    bottom: 50%;
+    backdrop-filter: blur(12px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 0.75rem;
+    height: 1.5rem;
+    font-size: 1.75rem;
+    color: var(--box-shadow-color);
+    text-shadow: 2px 2px var(--primary-theme-color);
 }

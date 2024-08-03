@@ -23,16 +23,10 @@ export default function Page({params}) {
 
 	return (
 		<div className={g.wrapper}>
-			<span className={g.type}>IMAGES</span>
-			<EmptySpace/>
-			<GridImage search={true} url={`https://api.pexels.com/v1/search?query=${slug}&per_page=10`}/>
-			<EmptySpace/>
-			<EmptySpace/>
-			<span className={s.type}>VIDEOS</span>
-			<EmptySpace/>
-			<GridVideo search={true} url={`https://api.pexels.com/videos/search?query=${slug}&per_page=10`}/>
-			<EmptySpace/>
-			<EmptySpace/>
+			<GridImage isType={true} isSearch={true} url={`https://api.pexels.com/v1/search?query=${slug}&per_page=10`}/>
+			<EmptySpace height={"48px"}/>
+			<GridVideo isType={true} isSearch={true} url={`https://api.pexels.com/videos/search?query=${slug}&per_page=10`}/>
+			<EmptySpace height={"48px"}/>
 		</div>
 	);
 }

@@ -2,11 +2,13 @@ import CollectionsStore from "@/stores/CollectionsStore";
 import ImageStore from "@/stores/ImageStore";
 import VideoStore from "@/stores/VideoStore";
 import {useCallback} from "react";
+import CurrentStore from "@/stores/CurrentStore";
 
-export const useFetchUserCollections = () => {
+export const useCollectionsFetcher = () => {
 	const {setAlbumsStore, setTapesStore} = CollectionsStore();
 	const {setImageFetcher} = ImageStore();
 	const {setVideoFetcher} = VideoStore();
+	const {setCurrentStore} = CurrentStore();
 
 	const fetchUserAlbums = useCallback(async (userId) => {
 		const request = {userId: userId};
@@ -24,6 +26,7 @@ export const useFetchUserCollections = () => {
 
 			if (data.status) {
 				setAlbumsStore(data.result.albums);
+				setCurrentStore(data.result.albums);
 				setImageFetcher(false);
 			} else {
 				console.error(data.message);
@@ -31,7 +34,7 @@ export const useFetchUserCollections = () => {
 		} catch (e) {
 			console.error("Fetch user albums failed: ", e);
 		}
-	}, [setAlbumsStore, setImageFetcher]);
+	}, [setAlbumsStore, setCurrentStore, setImageFetcher]);
 
 	const fetchUserTapes = useCallback(async (userId) => {
 		const request = {userId: userId};
@@ -49,6 +52,7 @@ export const useFetchUserCollections = () => {
 
 			if (data.status) {
 				setTapesStore(data.result.tapes);
+				setCurrentStore(data.result.tapes);
 				setVideoFetcher(false);
 			} else {
 				console.error(data.message);
@@ -56,7 +60,7 @@ export const useFetchUserCollections = () => {
 		} catch (e) {
 			console.error("Fetch user tapes failed: ", e);
 		}
-	}, [setTapesStore, setVideoFetcher]);
+	}, [setCurrentStore, setTapesStore, setVideoFetcher]);
 
 	return {fetchUserAlbums, fetchUserTapes};
 };

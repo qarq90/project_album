@@ -41,6 +41,7 @@
 }
 
 .editComponent {
+    z-index: 1000;
     border-radius: 8px;
     background-color: var(--secondary-dark-color);
     width: 50vw;

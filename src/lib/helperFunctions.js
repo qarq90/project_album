@@ -61,7 +61,7 @@ export const getCellType = (width, height) => {
 	const aspectRatio = width / height;
 
 	if (aspectRatio > 1.5) return 'panorama';
-	if (aspectRatio > 1.2) return 'landscape';
+	// if (aspectRatio > 1.2) return 'landscape';
 	if (aspectRatio < 0.8) return 'portrait';
 
 	return 'square';

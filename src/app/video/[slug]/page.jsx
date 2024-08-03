@@ -8,6 +8,7 @@ import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctio
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {useRouter} from "next/navigation";
 import {AddToTape} from "@/components/AddToTape";
+import {SkeletonDelta} from "@/components/SkeletonDelta";
 
 export default function Page({params}) {
 
@@ -41,6 +42,7 @@ export default function Page({params}) {
 				const response = await fetch(url, options);
 				const data = await response.json();
 				setVideo(data);
+				console.log(data)
 			} catch (error) {
 				console.error('Error fetching the video:', error);
 			}
@@ -104,7 +106,7 @@ export default function Page({params}) {
 						</div>
 					</>
 				) : (
-					<p>Loading...</p>
+					<SkeletonDelta />
 				)}
 			</div>
 			{openTape ? <AddToTape video={video} openTape={openTape} setOpenTape={setOpenTape}/> : null}

@@ -2,14 +2,14 @@
     width: 100vw;
     display: flex;
     align-items: center;
-    padding: 0.25rem 15rem;
+    padding: 0.25rem 15.5rem;
 }
 
 .search {
     border: none;
     outline: none;
     padding: 12px;
-    width: calc(100vw - 30rem - 30px - 9.5rem);
+    width: calc(100vw - 30rem - 260px);
     border-radius: 4px;
     font-size: 1.25rem;
     color: var(--primary-theme-color);

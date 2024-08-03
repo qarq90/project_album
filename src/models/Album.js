@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const ImageSchema = new Schema({
-	base64: {
+	url: {
 		type: String,
 		required: true
 	},

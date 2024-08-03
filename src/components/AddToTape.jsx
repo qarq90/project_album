@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/Button";
 import {Title} from "@/components/ui/Title";
 import {Input} from "@/components/ui/Input";
 import UserStore from "@/stores/UserStore";
-import {removeNameFromURL, urlToBase64} from "@/lib/helperFunctions";
+import {removeNameFromURL} from "@/lib/helperFunctions";
 import VideoStore from "@/stores/VideoStore";
 import {SkeletonCharlie} from "@/components/SkeletonCharlie";
 
@@ -15,6 +15,7 @@ export const AddToTape = (props) => {
 	const [create, setCreate] = useState(false);
 	const [name, setName] = useState("");
 	const [tapes, setTapes] = useState(null);
+	const [loading, setLoading] = useState(false)
 
 	const {
 		userId
@@ -42,7 +43,6 @@ export const AddToTape = (props) => {
 			return;
 		}
 
-		const base64 = await urlToBase64(props.video.image)
 		const videoAlt = removeNameFromURL(props.video.url);
 		const hdFile = props.video.video_files.find(file => file.quality === 'hd');
 
@@ -54,9 +54,8 @@ export const AddToTape = (props) => {
 					tapeTitle: name,
 					tapeData: [
 						{
-							base64: base64,
+							url: props.video.image,
 							videoId: props.video.id,
-							url: hdFile.link,
 							description: videoAlt,
 							width: props.video.width,
 							height: props.video.height,
@@ -68,7 +67,7 @@ export const AddToTape = (props) => {
 		};
 
 		try {
-			const response = await fetch('/api/post/tape/create', {
+			const response = await fetch('/api/post/collections/tapes/create', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -91,17 +90,14 @@ export const AddToTape = (props) => {
 
 	async function addToCurrentTape(tapeId) {
 		try {
-			const base64 = await urlToBase64(props.video.image);
 			const videoAlt = removeNameFromURL(props.video.url);
-			const hdFile = props.video.video_files.find(file => file.quality === 'hd');
 
 			const request = {
 				userId: userId,
 				tapeId: tapeId,
 				video: {
-					base64: base64,
+					url: props.video.image,
 					videoId: props.video.id,
-					url: hdFile.link,
 					description: videoAlt,
 					width: props.video.width,
 					height: props.video.height,
@@ -109,7 +105,7 @@ export const AddToTape = (props) => {
 				}
 			};
 
-			const res = await fetch('/api/post/tape/add', {
+			const res = await fetch('/api/post/collections/tapes/add', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -138,7 +134,7 @@ export const AddToTape = (props) => {
 
 			if (tapes === null) {
 				try {
-					const response = await fetch('/api/post/tape/fetch', {
+					const response = await fetch('/api/post/collections/tapes/fetch', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
@@ -157,7 +153,7 @@ export const AddToTape = (props) => {
 				}
 			}
 		};
-		fetchTapes().then(() => null);
+		fetchTapes().then(() => setLoading(true));
 	}, [setVideoFetcher, tapes, userId]);
 
 	return (
@@ -173,29 +169,39 @@ export const AddToTape = (props) => {
 					<Title text="Add To Tape"/>
 					<div className={a.albumGrid}>
 						{
-							tapes !== null ? (
+							loading ?
 								<>
-									<div className={a.album} onClick={openCreateHandler}>
-										Create a new tape
-									</div>
 									{
-										tapes.map((tape, index) => (
-											<div
-												className={a.album}
-												key={tape.index}
-												style={{
-													backgroundImage: `url(${tape.tapeData[0].base64})`,
-													backgroundSize: 'cover',
-													backgroundPosition: 'center',
-												}}
-												onClick={() => addToCurrentTape(tapes[index].tapeId, index)}
-											>
-												<p className={a.albumName}>{tape.tapeTitle}</p>
-											</div>
-										))
-									}
-								</>
-							) : (
+										tapes !== null ? (
+											<>
+												<div className={a.album} onClick={openCreateHandler}>
+													Create a new tape
+												</div>
+												{
+													tapes.map((tape, index) => (
+														<div
+															className={a.album}
+															key={tape.index}
+															style={{
+																backgroundImage: `url(${tape.tapeData[0].url})`,
+																backgroundSize: 'cover',
+																backgroundPosition: 'center',
+															}}
+															onClick={() => addToCurrentTape(tapes[index].tapeId, index)}
+														>
+															<p className={a.albumName}>{tape.tapeTitle}</p>
+														</div>
+													))
+												}
+											</>
+										) : (
+											<>
+												<div className={a.album} onClick={openCreateHandler}>
+													Create a new tape
+												</div>
+											</>
+										)}
+								</> :
 								<>
 									<div className={a.album} onClick={openCreateHandler}>
 										Create a new tape
@@ -206,7 +212,7 @@ export const AddToTape = (props) => {
 									<SkeletonCharlie/>
 									<SkeletonCharlie/>
 								</>
-							)}
+						}
 					</div>
 					<div className={a.btnContainer}>
 						<Button text="Close" onClick={closeHandler}/>

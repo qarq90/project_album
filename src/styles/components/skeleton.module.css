@@ -1,6 +1,6 @@
 .container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto;
     gap: 16px;
     width: 100%;
@@ -69,20 +69,6 @@
     position: relative;
 }
 
-.landscape {
-    grid-column: span 2;
-    grid-row: span 1;
-    padding-top: 28.125%;
-    position: relative;
-}
-
-.landscape::before {
-    content: "";
-    display: block;
-    padding-top: 28.125%;
-    position: relative;
-}
-
 .skeletonWrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -93,6 +79,15 @@
 .skeleton {
     width: 100%;
     height: 200px;
+    background: var(--primary-dark-color);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.skeletonContent {
+    width: 100%;
+    height: 650px;
     background: var(--primary-dark-color);
     position: relative;
     overflow: hidden;
@@ -110,7 +105,7 @@
     margin-bottom: 24px;
 }
 
-.skeleton::before, .skeletonTitle::before, .skeletonSingle::before {
+.skeleton::before, .skeletonTitle::before, .skeletonSingle::before, .skeletonContent::before {
     content: "";
     display: block;
     position: absolute;

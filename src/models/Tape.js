@@ -3,15 +3,11 @@ import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const VideoSchema = new Schema({
-	base64: {
+	url: {
 		type: String,
 		required: true
 	},
 	videoId: {
-		type: String,
-		required: true
-	},
-	url: {
 		type: String,
 		required: true
 	},

@@ -19,10 +19,6 @@ export const NavRight = [
 		href: "/profile"
 	},
 	{
-		text: 'Settings',
-		href: "/settings"
-	},
-	{
 		text: 'Log Out',
 		href: "/auth/login"
 	}

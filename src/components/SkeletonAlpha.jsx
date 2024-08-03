@@ -18,7 +18,7 @@ export const SkeletonAlpha = (props) => {
 	return (
 		<>
 			{
-				props.isHome ?
+				props.isType ?
 					<>
 						<motion.div
 							className={s.skeletonTitle}

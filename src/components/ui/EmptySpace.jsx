@@ -1,8 +1,8 @@
-export const EmptySpace = () => {
+export const EmptySpace = (props) => {
 	return (
 		<>
 			<div style={{
-				height: "24px",
+				height: props.height,
 				width: "100%"
 			}}>
 			</div>

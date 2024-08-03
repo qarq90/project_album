@@ -6,123 +6,176 @@ import Link from "next/link";
 import {FaTrashCan} from "react-icons/fa6";
 import {FaDownload} from "react-icons/fa";
 import {SkeletonAlpha} from "@/components/SkeletonAlpha";
+import {EmptySpace} from "@/components/ui/EmptySpace";
+import UserStore from "@/stores/UserStore";
+import CurrentStore from "@/stores/CurrentStore";
+import {useEffect} from "react";
+import {useCollectionsFetcher} from "@/hooks/useCollectionsFetcher";
 
-export const CollectionsGrid = (props) => {
+export const CollectionsContent = (props) => {
+
+	const {fetchUserAlbums, fetchUserTapes} = useCollectionsFetcher();
+
+	const {currentStore} = CurrentStore();
+	const {userId} = UserStore();
+
 	const downloadMedia = (url, type, name) => {
-		name.length === 0 ? name = "snapshots_download" : name;
-		if (type === "video") {
-			handleDownload(url, type, name).then(() => null)
+		name.length === 0 ? (name = "snapshots_download") : name;
+		handleDownload(url, type, name).then(() => null);
+	};
+
+	const deleteHandler = async (type, itemId, _id) => {
+
+		let request;
+		let response;
+
+		if (type === 'image'){
+			request = {
+				userId: userId,
+				albumId: props.collectionId,
+				imageId: itemId,
+			};
+
+			response = await fetch("/api/post/collections/albums/remove", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(request),
+			});
 		} else {
-			handleDownload(url, type, name).then(() => null)
+			request = {
+				userId: userId,
+				tapeId: props.collectionId,
+				videoId: itemId,
+			};
+
+			response = await fetch("/api/post/collections/tapes/remove", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(request),
+			});
 		}
-	}
+
+		try {
+			const data = await response.json();
+			if (data.status) {
+				fetchUserAlbums(userId).then(() => null);
+				fetchUserTapes(userId).then(() => null);
+			} else {
+				alert(data.message);
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	useEffect(() => {
+		console.log("Current Store Updated: ", currentStore);
+	}, [currentStore]);
+
 	return (
 		<>
 			{
-
-				props.medaiType === "album" ?
+				props.mediaType === "album" ?
 					<>
-						<h1 className={s.type}>{props.currentAlbum.albumTitle}</h1>
+						<h1 className={s.type}>{currentStore.albumTitle}</h1>
+						<EmptySpace/>
 						<motion.div
 							className={s.imageGrid}
 							variants={containerVariants}
 							initial="hidden"
 							animate="visible"
 						>
-							{
-								props.currentAlbum && props.currentAlbum.albumData && props.currentAlbum.albumData.length > 0 ? (
-									<AnimatePresence>
-										{
-											props.currentAlbum.albumData.map((image, index) => {
-												const cellType = getCellType(image.width, image.height);
-												return (
-													<motion.div
-														key={index}
-														className={`${s.cell} ${s[cellType]}`}
-														variants={itemVariants}
-														transition={{type: 'spring', stiffness: 300}}
-													>
-														<img
-															className={s.cellContent}
-															src={image.base64}
-															alt={image.description}
-														/>
-														<div className={s.cellActions}>
-															<div className={s.actionA}>
-																<Link className={s.cellLink}
-																      href={`/image/${image.imageId}`}>
-																	View Image
-																</Link>
-															</div>
-															<div className={s.actionB}>
-																<span className={s.action}>
-																	<FaTrashCan/>
-																</span>
-																<span className={s.action}>
-																	<FaDownload
-																		onClick={() => downloadMedia(image.base64, 'image', image.description)}
-																	/>
-																</span>
-															</div>
-														</div>
-													</motion.div>
-												);
-											})
-										}
-									</AnimatePresence>
-								) : (<><SkeletonAlpha/></>)}
+							{currentStore && currentStore.albumData && currentStore.albumData.length > 0 ? (
+								<AnimatePresence>
+									{currentStore.albumData.map((image, index) => {
+										const cellType = getCellType(image.width, image.height);
+										return (
+											<motion.div
+												key={index}
+												className={`${s.cell} ${s[cellType]}`}
+												variants={itemVariants}
+												transition={{type: "spring", stiffness: 300}}
+											>
+												<img className={s.cellContent} src={image.url} alt={image.description}/>
+												<div className={s.cellActions}>
+													<div className={s.actionA}>
+														<Link className={s.cellLink} href={`/image/${image.imageId}`}>
+															View Image
+														</Link>
+													</div>
+													<div className={s.actionB}>
+														<span className={s.action}>
+									                        <FaTrashCan
+										                        onClick={() => deleteHandler('image', image.imageId, image._id)}
+									                        />
+														</span>
+														<span className={s.action}>
+									                        <FaDownload
+										                        onClick={() => downloadMedia(image.url, "image", image.description)}
+									                        />
+														</span>
+													</div>
+												</div>
+											</motion.div>
+										);
+									})}
+								</AnimatePresence>
+							) : (
+								<SkeletonAlpha/>
+							)}
 						</motion.div>
 					</> :
 					<>
-						<h1 className={s.type}>{props.currentTape.tapeTitle}</h1>
+						<h1 className={s.type}>{currentStore.tapeTitle}</h1>
+						<EmptySpace/>
 						<motion.div
 							className={s.videoGrid}
 							variants={containerVariants}
 							initial="hidden"
 							animate="visible"
 						>
-							{
-								props.currentTape && props.currentTape.tapeData && props.currentTape.tapeData.length > 0 ? (
-									<AnimatePresence>
-										{
-											props.currentTape.tapeData.map((video, index) => {
-												const cellType = getCellType(video.width, video.height);
-												return (
-													<motion.div
-														key={index}
-														className={`${s.cell} ${s[cellType]}`}
-														variants={itemVariants}
-														transition={{type: 'spring', stiffness: 300}}
-													>
-														<video
-															className={s.cellContent}
-															src={video.url}
-															controls
-														/>
-														<div className={s.cellActions}>
-															<div className={s.actionA}>
-																<Link className={s.cellLink}
-																      href={`/video/${video.videoId}`}>
-																	Visit Video
-																</Link>
-															</div>
-															<div className={s.actionB}>
-																<span className={s.action}>
-																	<FaTrashCan/>
-																</span>
-																<span className={s.action}>
-																	<FaDownload
-																		onClick={() => downloadMedia(video.url, 'video', video.description)}
-																	/>
-																</span>
-															</div>
-														</div>
-													</motion.div>
-												);
-											})
-										}
-									</AnimatePresence>
-								) : (<><SkeletonAlpha/></>)}
+							{currentStore && currentStore.tapeData && currentStore.tapeData.length > 0 ? (
+								<AnimatePresence>
+									{currentStore.tapeData.map((video, index) => {
+										const cellType = getCellType(video.width, video.height);
+										return (
+											<motion.div
+												key={index}
+												className={`${s.cell} ${s[cellType]}`}
+												variants={itemVariants}
+												transition={{type: "spring", stiffness: 300}}
+											>
+												<img className={s.cellContent} src={video.url} alt={video.description}/>
+												<div className={s.cellActions}>
+													<div className={s.actionA}>
+														<Link className={s.cellLink} href={`/video/${video.videoId}`}>
+															View Image
+														</Link>
+													</div>
+													<div className={s.actionB}>
+								                      <span className={s.action}>
+								                        <FaTrashCan
+									                        onClick={() => deleteHandler('video', video.imageId, video._id)}
+								                        />
+								                      </span>
+														<span className={s.action}>
+								                        <FaDownload
+									                        onClick={() => downloadMedia(video.url, "video", video.description)}
+								                        />
+								                      </span>
+													</div>
+												</div>
+											</motion.div>
+										);
+									})}
+								</AnimatePresence>
+							) : (
+								<SkeletonAlpha/>
+							)}
 						</motion.div>
 					</>
 			}

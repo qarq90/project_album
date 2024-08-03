@@ -21,14 +21,10 @@ export default function Page() {
 	return (
 		<>
 			<div className={s.wrapper}>
-				<EmptySpace/>
-				<GridImage isHome={true} search={false} url={`https://api.pexels.com/v1/curated?per_page=6`}/>
-				<EmptySpace/>
-				<EmptySpace/>
-				<EmptySpace/>
-				<GridVideo isHome={true} search={false} url={`https://api.pexels.com/videos/popular?per_page=6`}/>
-				<EmptySpace/>
-				<EmptySpace/>
+				<GridImage isType={true} isSearch={false} url={`https://api.pexels.com/v1/curated?per_page=6`}/>
+				<EmptySpace height={"48px"}/>
+				<GridVideo isType={true} isSearch={false} url={`https://api.pexels.com/videos/popular?per_page=6`}/>
+				<EmptySpace height={"48px"}/>
 			</div>
 		</>
 	);

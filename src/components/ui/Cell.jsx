@@ -1,17 +1,29 @@
-import s from "@/styles/globals.module.css";
-import {itemVariants} from "@/styles/animations/scale";
-import Link from "next/link";
-import {FaDownload} from "react-icons/fa";
-import {motion} from "framer-motion";
-import {getCellType, handleDownload} from "@/lib/helperFunctions";
+import s from "@/styles/globals.module.css"
+import {itemVariants} from "@/styles/animations/scale"
+import Link from "next/link"
+import {FaDownload} from "react-icons/fa"
+import {motion} from "framer-motion"
+import {getCellType, handleDownload, removeNameFromURL} from "@/lib/helperFunctions"
 
-export const Image = (props) => {
+export const Cell = (props) => {
 
-	const cellType = getCellType(props.image.width, props.image.height);
-	const downloadMedia = async (url, type, name) => {
-		name.length === 0 ? name = "snapshots_download.png" : name;
-		await handleDownload(url, type, name).then(() => null)
+	const cellType = getCellType(props.data.width, props.data.height)
+	const downloadMedia = async () => {
+		if (mediaType) {
+			let name = props.data.alt || "snapshots_download.png"
+			await handleDownload(props.data.src.original, 'image', name)
+		} else {
+			let name = removeNameFromURL(props.data.url)
+			let hdFile = props.data.video_files.find(file => file.quality === 'hd')
+			if (hdFile) {
+				await handleDownload(hdFile.link, 'video', name)
+			} else {
+				console.error('No HD quality video found.')
+			}
+		}
 	}
+
+	const mediaType = props.type === 'image'
 
 	return (
 		<>
@@ -22,24 +34,30 @@ export const Image = (props) => {
 				transition={{type: 'spring', stiffness: 300}}
 			>
 				<Link
-					href={`/image/${props.image.id}`}>
+					href={mediaType ? `/image/${props.data.id}` : `/video/${props.data.id}`}
+				>
 					<img
 						className={s.cellContent}
-						src={props.image.src.original}
-						alt={props.image.alt}
+						src={mediaType ? props.data.src.original : props.data.image}
+						alt={props.data.alt}
 					/>
 				</Link>
 				<div className={s.cellActions}>
 					<div className={s.actionA}>
-						<Link className={s.cellLink}
-						      href={`/image/${props.image.id}`}>
-							View Image
+						<Link
+							className={s.cellLink}
+							href={mediaType ? `/image/${props.data.id}` : `/video/${props.data.id}`}
+						>
+							{mediaType ? "View Image" : "Visit Video"}
 						</Link>
 					</div>
 					<div className={s.actionB}>
 						<span className={s.action}>
 							<FaDownload
-								onClick={() => downloadMedia(props.image.src.original, 'image', props.image.alt)}
+								onClick={() => downloadMedia(
+									mediaType ? props.data.src.original : 'video',
+									mediaType ? 'image' : 'video', props.data.alt
+								)}
 							/>
 						</span>
 					</div>

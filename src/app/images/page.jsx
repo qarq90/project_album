@@ -20,8 +20,8 @@ export default function Page() {
 	return (
 		<>
 			<div className={s.wrapper}>
-				<GridImage isHome={false} url={`https://api.pexels.com/v1/curated?per_page=8`}/>
-				<EmptySpace/>
+				<GridImage isType={false} isSearch={false} url={`https://api.pexels.com/v1/curated?per_page=8`}/>
+				<EmptySpace height={"24px"}/>
 			</div>
 		</>
 	)

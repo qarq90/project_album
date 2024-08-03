@@ -8,6 +8,7 @@ import {handleDownload, removeNumbersAndTrailingChars} from "@/lib/helperFunctio
 import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {AddToAlbum} from "@/components/AddToAlbum";
+import {SkeletonDelta} from "@/components/SkeletonDelta";
 
 export default function Page({params}) {
 
@@ -72,14 +73,14 @@ export default function Page({params}) {
 	return (
 		<>
 			<div className={g.wrapper}>
-				{image ? (
+				{image !== null ? (
 					<>
 						<img
 							className={s.image}
-							src={image.src.original}
-							alt={image.alt || slug}
+							src={image?.src?.original}
+							alt={image?.alt || slug}
 						/>
-						<h2 className={s.name}>Photographer: {image.photographer}</h2>
+						<h2 className={s.name}>Photographer: {image?.photographer}</h2>
 						<div className={s.bottomContainer}>
 							<select
 								className={s.select}
@@ -100,7 +101,7 @@ export default function Page({params}) {
 						</div>
 					</>
 				) : (
-					<p>Loading...</p>
+					<SkeletonDelta />
 				)}
 			</div>
 			{openAlbum ? <AddToAlbum image={image} openAlbum={openAlbum} setOpenAlbum={setOpenAlbum}/> : null}
