@@ -9,7 +9,7 @@
 - **Download and View**: Options to download media or view it directly within the application.
 - **State Management**: Efficient state management with Zustand for a smooth user experience.
 
-![img.png](img.png)
+![image](https://github.com/user-attachments/assets/6be8de4b-c6b6-4fc4-8fa8-7eb9a0201224)
 
 ## Getting Started
 
