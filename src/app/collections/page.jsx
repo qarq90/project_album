@@ -13,6 +13,8 @@ import ImageStore from "@/stores/ImageStore";
 import VideoStore from "@/stores/VideoStore";
 import {EmptySpace} from "@/components/ui/EmptySpace";
 import {FaImages, FaVideo} from "react-icons/fa";
+import {motion} from "framer-motion"
+import {containerVariants} from "@/styles/animations/scale";
 
 export default function Page() {
 
@@ -78,14 +80,18 @@ export default function Page() {
 									type="album"
 								/>
 							) : (
-								<>
+								<motion.div
+									variants={containerVariants}
+									initial="hidden"
+									animate="visible"
+								>
 									<span className={g.type}>YOUR ALBUMS</span>
 									<EmptySpace height={"24px"}/>
 									<div className={g.nothing}><FaImages/> No albums found. Save some now to view them
 										later!
 									</div>
 									<EmptySpace height={"48px"}/>
-								</>
+								</motion.div>
 							)
 						}
 						{
@@ -105,14 +111,18 @@ export default function Page() {
 									type="tape"
 								/>
 							) : (
-								<>
+								<motion.div
+									variants={containerVariants}
+									initial="hidden"
+									animate="visible"
+								>
 									<span className={g.type}>YOUR TAPES</span>
 									<EmptySpace height={"24px"}/>
 									<div className={g.nothing}><FaVideo/> No tapes found. Save some now to view them
 										later!
 									</div>
 									<EmptySpace height={"48px"}/>
-								</>
+								</motion.div>
 							)
 						}
 					</>
