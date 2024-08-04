@@ -36,14 +36,10 @@ export default function Page() {
 	useEffect(() => {
 		const fetchData = async () => {
 			await fetchUser();
-			if (imageFetcher) {
-				await fetchUserAlbums(userId);
-				setImageFetcher(false);
-			}
-			if (videoFetcher) {
-				await fetchUserTapes(userId);
-				setVideoFetcher(false);
-			}
+			await fetchUserAlbums(userId);
+			setImageFetcher(false);
+			await fetchUserTapes(userId);
+			setVideoFetcher(false);
 			setLoading(false);
 		};
 

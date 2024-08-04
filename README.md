@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Snapshots
 
-## Getting Started
+**Snapshots** is a modern web application designed to provide a seamless experience for managing and exploring images and videos. Built with Next.js and MongoDB, Snapshots allows users to create, view, and delete collections of multimedia content, making it an ideal solution for organizing personal or professional media.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Dynamic Collections**: Create and manage collections of images and videos.
+- **Interactive UI**: Utilize animations and transitions for a smooth and engaging user experience.
+- **Download and View**: Options to download media or view it directly within the application.
+- **State Management**: Efficient state management with Zustand for a smooth user experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![img.png](img.png)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Next.js**: A React framework for building server-side rendered and statically generated applications.
+- **MongoDB**: A NoSQL database for storing and managing multimedia content.
+- **Framer Motion**: A library for animations and transitions.
+- **Zustand**: A state management library for React.
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+To get started with Snapshots locally:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/qarq90/project_album
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Navigate to the project directory:
+    ```bash
+    cd snapshots
+    ```
 
-## Deploy on Vercel
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Run the development server:
+    ```bash
+    npm run dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see the app in action.
+
+## Contributing
+
+Contributions are welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) for more details on how to contribute to the project.
