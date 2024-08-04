@@ -94,7 +94,7 @@
     }
 }
 
-.cellLink > svg{
+.cellLink > svg {
     margin-right: 8px;
 }
 
@@ -178,12 +178,28 @@
     text-shadow: 2px 2px var(--primary-theme-color);
 }
 
-.collectionHeader{
+.collectionHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.collectionHeader > button{
+.collectionHeader > button {
     width: 20%;
+}
+
+.nothing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-radius: 8px;
+    height: 125px;
+    font-size: 2rem;
+    background-color: var(--primary-theme-color);
+}
+
+.nothing > svg {
+    scale: 1.5;
+    margin-right: 24px;
 }

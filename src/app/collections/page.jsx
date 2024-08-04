@@ -11,6 +11,8 @@ import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import CollectionsStore from "@/stores/CollectionsStore";
 import ImageStore from "@/stores/ImageStore";
 import VideoStore from "@/stores/VideoStore";
+import {EmptySpace} from "@/components/ui/EmptySpace";
+import {FaImages, FaVideo} from "react-icons/fa";
 
 export default function Page() {
 
@@ -43,7 +45,7 @@ export default function Page() {
 			setLoading(false);
 		};
 
-		fetchData();
+		fetchData().then(() => null);
 
 		const timer = setTimeout(() => {
 			setLoading(false);
@@ -76,7 +78,14 @@ export default function Page() {
 									type="album"
 								/>
 							) : (
-								<div>No Albums Yet</div>
+								<>
+									<span className={g.type}>YOUR ALBUMS</span>
+									<EmptySpace height={"24px"}/>
+									<div className={g.nothing}><FaImages/> No albums found. Save some now to view them
+										later!
+									</div>
+									<EmptySpace height={"48px"}/>
+								</>
 							)
 						}
 						{
@@ -96,7 +105,14 @@ export default function Page() {
 									type="tape"
 								/>
 							) : (
-								<div>No Tapes Yet</div>
+								<>
+									<span className={g.type}>YOUR TAPES</span>
+									<EmptySpace height={"24px"}/>
+									<div className={g.nothing}><FaVideo/> No tapes found. Save some now to view them
+										later!
+									</div>
+									<EmptySpace height={"48px"}/>
+								</>
 							)
 						}
 					</>

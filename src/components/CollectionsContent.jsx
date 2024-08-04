@@ -12,32 +12,38 @@ import CurrentStore from "@/stores/CurrentStore";
 import {useEffect} from "react";
 import {useCollectionsFetcher} from "@/hooks/useCollectionsFetcher";
 import {Button} from "@/components/ui/Button";
+import {useRouter} from "next/navigation";
+import ImageStore from "@/stores/ImageStore";
+import VideoStore from "@/stores/VideoStore";
 
 export const CollectionsContent = (props) => {
+
+	const router = useRouter();
 
 	const {fetchUserAlbums, fetchUserTapes} = useCollectionsFetcher();
 
 	const {currentStore} = CurrentStore();
 	const {userId} = UserStore();
+	const {imageFetcher, setImageFetcher} = ImageStore();
+	const {videoFetcher, setVideoFetcher} = VideoStore();
 
 	const downloadMedia = (url, type, name) => {
 		name.length === 0 ? (name = "snapshots_download") : name;
 		handleDownload(url, type, name).then(() => null);
 	};
 
-	const deleteHandler = async (type, itemId, _id) => {
+	const deleteCollection = async (type, collectionId, _id) => {
 
-		let request;
-		let response;
+		let request
+		let response
 
-		if (type === 'image'){
+		if (type === "album") {
 			request = {
 				userId: userId,
 				albumId: props.collectionId,
-				imageId: itemId,
 			};
 
-			response = await fetch("/api/post/collections/albums/remove", {
+			response = await fetch("/api/post/collections/albums/delete", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -48,10 +54,58 @@ export const CollectionsContent = (props) => {
 			request = {
 				userId: userId,
 				tapeId: props.collectionId,
-				videoId: itemId,
 			};
 
-			response = await fetch("/api/post/collections/tapes/remove", {
+			response = await fetch("/api/post/collections/tapes/delete", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(request),
+			});
+		}
+
+		try {
+
+			const data = await response.json();
+			if (data.status) {
+				setImageFetcher(true)
+				setVideoFetcher(true)
+				router.push("/collections")
+			} else {
+				alert(data.message);
+			}
+		} catch (e) {
+			console.log(e);
+		}
+
+	}
+
+	const deleteHandler = async (type, itemId, _id) => {
+
+		let request;
+		let response;
+
+		if (type === 'image') {
+			request = {
+				userId: userId,
+				albumId: props.collectionId,
+			};
+
+			response = await fetch("/api/post/collections/albums/delete", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(request),
+			});
+		} else {
+			request = {
+				userId: userId,
+				tapeId: props.collectionId,
+			};
+
+			response = await fetch("/api/post/collections/tapes/delete", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -89,7 +143,9 @@ export const CollectionsContent = (props) => {
 							className={s.collectionHeader}
 						>
 							<h1 className={s.type}>{currentStore.albumTitle}</h1>
-							<Button icon={<FaTrashCan />} text={"Delete Album"}/>
+							<Button icon={<FaTrashCan/>} text={"Delete Album"}
+							        onClick={() => deleteCollection('album', props.collectionId, userId)}
+							/>
 						</motion.div>
 						<EmptySpace height={"24px"}/>
 						<motion.div
@@ -146,7 +202,9 @@ export const CollectionsContent = (props) => {
 							className={s.collectionHeader}
 						>
 							<h1 className={s.type}>{currentStore.tapeTitle}</h1>
-							<Button icon={<FaTrashCan />} text={"Delete Tape"}/>
+							<Button icon={<FaTrashCan/>} text={"Delete Tape"}
+							        onClick={() => deleteCollection('tape', currentStore.tapeId, userId)}
+							/>
 						</motion.div>
 						<EmptySpace height={"24px"}/>
 						<motion.div

@@ -4,7 +4,7 @@ import Tapes from "@/models/Tape";
 
 export const POST = async (request) => {
 	try {
-		const {userId, tapeId, videoId} = await request.json();
+		const {userId, tapeId} = await request.json();
 
 		await connect();
 
@@ -15,7 +15,7 @@ export const POST = async (request) => {
 			},
 			{
 				$pull: {
-					"tapes.$.tapeId": {videoId: videoId}
+					tapes: {tapeId: String(tapeId)}
 				}
 			},
 			{
@@ -25,13 +25,13 @@ export const POST = async (request) => {
 
 		if (result) {
 			return NextResponse.json({
-				message: 'Video removed from tape successfully',
+				message: 'Image removed from album successfully',
 				status: true,
 				result: result
 			});
 		} else {
 			return NextResponse.json({
-				message: 'Video failed to be removed from tape',
+				message: 'Image failed to be removed from album',
 				status: false
 			});
 		}

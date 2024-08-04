@@ -1,21 +1,20 @@
 import {NextResponse} from "next/server";
 import connect from "@/lib/connection.js";
-import Tapes from "@/models/Tape";
+import Albums from "@/models/Album.js";
 
 export const POST = async (request) => {
 	try {
-		const {userId, tapeId, videoId} = await request.json();
+		const {userId, albumId} = await request.json();
 
 		await connect();
 
-		const result = await Tapes.findOneAndUpdate(
+		const result = await Albums.findOneAndUpdate(
 			{
 				userId: userId,
-				"tapes.tapeId": tapeId
 			},
 			{
 				$pull: {
-					"tapes.$.tapeId": {videoId: videoId}
+					albums: { albumId: String(albumId) }
 				}
 			},
 			{
@@ -25,13 +24,13 @@ export const POST = async (request) => {
 
 		if (result) {
 			return NextResponse.json({
-				message: 'Video removed from tape successfully',
+				message: 'Album deleted successfully.',
 				status: true,
 				result: result
 			});
 		} else {
 			return NextResponse.json({
-				message: 'Video failed to be removed from tape',
+				message: 'Failed to delete tape',
 				status: false
 			});
 		}
