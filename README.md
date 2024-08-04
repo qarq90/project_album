@@ -11,38 +11,16 @@
 
 ![img.png](img.png)
 
-## Technologies Used
+## Getting Started
 
-- **Next.js**: A React framework for building server-side rendered and statically generated applications.
-- **MongoDB**: A NoSQL database for storing and managing multimedia content.
-- **Framer Motion**: A library for animations and transitions.
-- **Zustand**: A state management library for React.
+To get started with Dawg, follow these steps:
 
-## Installation
-
-To get started with Snapshots locally:
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/qarq90/project_album
-    ```
-
-2. Navigate to the project directory:
-    ```bash
-    cd snapshots
-    ```
-
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
-
-4. Run the development server:
-    ```bash
-    npm run dev
-    ```
-
-5. Open your browser and visit [http://localhost:3000](http://localhost:3000) to see the app in action.
+1. Clone this repository.
+2. Install dependencies by running `npm install`.
+3. Set up your MongoDB database.
+4. Configure your environment variables.
+5. Run the development server using `npm run dev`.
+6. Start exploring Snapshots!
 
 ## Contributing
 

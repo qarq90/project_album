@@ -32,13 +32,20 @@ export default function Page() {
 
 	const handleImgUpload = (e) => {
 		const file = e.target.files[0];
-		const reader = new FileReader();
-
-		reader.onloadend = () => {
-			setPfp(reader.result);
-		};
-
 		if (file) {
+			const fileType = file.type;
+			const allowedTypes = ["image/jpeg", "image/png"];
+
+			if (!allowedTypes.includes(fileType)) {
+				alert("Unsupported file type. Please upload a JPG or PNG image.");
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setPfp(reader.result);
+			};
+
 			reader.readAsDataURL(file);
 		}
 	};
@@ -111,7 +118,7 @@ export default function Page() {
 			<div className={g.container}>
 				<Title text="Signup"/>
 				<Label text="Email"/>
-				<Input placeholder="deepthorat06@gmail.com"
+				<Input placeholder="alicesmith98@gmail.com"
 				       type="text"
 				       value={email}
 				       onChange={(e) => setEmail(e.target.value)}
@@ -125,14 +132,14 @@ export default function Page() {
 				/>
 
 				<Label text="Username"/>
-				<Input placeholder="Deep Thorat"
+				<Input placeholder="Alice Smith"
 				       type="text"
 				       value={name}
 				       onChange={(e) => setName(e.target.value)}
 				/>
 
 				<Label text="Phone"/>
-				<Input placeholder="95427*****"
+				<Input placeholder="24856*****"
 				       type="text"
 				       value={phone}
 				       onChange={(e) => setPhone(e.target.value)}

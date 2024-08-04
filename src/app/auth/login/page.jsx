@@ -81,7 +81,7 @@ export default function Page() {
 			<div className={g.container}>
 				<Title text="Login"/>
 				<Label text="Email"/>
-				<Input placeholder="deepthorat06@gmail.com"
+				<Input placeholder="alicesmith98@gmail.com"
 				       type="text"
 				       value={email}
 				       onChange={(e) => setEmail(e.target.value)}
