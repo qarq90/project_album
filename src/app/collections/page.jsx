@@ -1,7 +1,7 @@
 "use client";
 
 import g from "@/styles/globals.module.css";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {useRouter} from "next/navigation";
 import UserStore from "@/stores/UserStore";
@@ -22,52 +22,86 @@ export default function Page() {
 
 	const {fetchUserAlbums, fetchUserTapes} = useCollectionsFetcher();
 
+	const [loading, setLoading] = useState(true);
+
 	const {albumsStore} = CollectionsStore();
-	const {imageFetcher} = ImageStore();
+	const {imageFetcher, setImageFetcher} = ImageStore();
 	const {tapesStore} = CollectionsStore();
-	const {videoFetcher} = VideoStore();
+	const {videoFetcher, setVideoFetcher} = VideoStore();
 
 	useEffect(() => {
-		fetchUser().then(() => {
+		const fetchData = async () => {
+			await fetchUser();
 			if (imageFetcher) {
-				fetchUserAlbums(userId).then(() => null);
+				await fetchUserAlbums(userId);
+				setImageFetcher(false);
 			}
-
 			if (videoFetcher) {
-				fetchUserTapes(userId).then(() => null);
+				await fetchUserTapes(userId);
+				setVideoFetcher(false);
 			}
-		});
-	}, [fetchUser, fetchUserAlbums, fetchUserTapes, imageFetcher, videoFetcher, userId]);
+			setLoading(false);
+		};
+
+		fetchData();
+
+		const timer = setTimeout(() => {
+			setLoading(false);
+		}, 1750);
+
+		return () => clearTimeout(timer);
+	}, [fetchUser, fetchUserAlbums, fetchUserTapes, imageFetcher, videoFetcher, userId, setImageFetcher, setVideoFetcher]);
 
 	return (
 		<div className={g.wrapper}>
-			{albumsStore.length !== 0 && tapesStore.length !== 0 ? (
-				<>
-					<CollectionsGrid
-						title="YOUR ALBUMS"
-						collectionStore={albumsStore.map(album => ({
-							id: album.albumId,
-							data: album.albumData,
-							title: album.albumTitle,
-						}))}
-						isFetching={imageFetcher}
-						type="album"
-					/>
-
-					<CollectionsGrid
-						title="YOUR TAPES"
-						collectionStore={tapesStore.map(tape => ({
-							id: tape.tapeId,
-							data: tape.tapeData,
-							title: tape.tapeTitle,
-						}))}
-						isFetching={videoFetcher}
-						type="tape"
-					/>
-				</>
-			) : (
-				<SkeletonAlpha/>
-			)}
+			{
+				loading ? (
+					<SkeletonAlpha/>
+				) : (
+					<>
+						{
+							albumsStore.length !== 0 ? (
+								<CollectionsGrid
+									title="YOUR ALBUMS"
+									collectionStore={
+										albumsStore.map(album => (
+											{
+												id: album.albumId,
+												data: album.albumData,
+												title: album.albumTitle,
+											}
+										))
+									}
+									isFetching={imageFetcher}
+									type="album"
+								/>
+							) : (
+								<div>No Albums Yet</div>
+							)
+						}
+						{
+							tapesStore.length !== 0 ? (
+								<CollectionsGrid
+									title="YOUR TAPES"
+									collectionStore={
+										tapesStore.map(tape => (
+											{
+												id: tape.tapeId,
+												data: tape.tapeData,
+												title: tape.tapeTitle,
+											}
+										))
+									}
+									isFetching={videoFetcher}
+									type="tape"
+								/>
+							) : (
+								<div>No Tapes Yet</div>
+							)
+						}
+					</>
+				)
+			}
 		</div>
 	);
 }

@@ -11,6 +11,7 @@ import UserStore from "@/stores/UserStore";
 import CurrentStore from "@/stores/CurrentStore";
 import {useEffect} from "react";
 import {useCollectionsFetcher} from "@/hooks/useCollectionsFetcher";
+import {Button} from "@/components/ui/Button";
 
 export const CollectionsContent = (props) => {
 
@@ -81,8 +82,16 @@ export const CollectionsContent = (props) => {
 			{
 				props.mediaType === "album" ?
 					<>
-						<h1 className={s.type}>{currentStore.albumTitle}</h1>
-						<EmptySpace/>
+						<motion.div
+							variants={containerVariants}
+							initial="hidden"
+							animate="visible"
+							className={s.collectionHeader}
+						>
+							<h1 className={s.type}>{currentStore.albumTitle}</h1>
+							<Button icon={<FaTrashCan />} text={"Delete Album"}/>
+						</motion.div>
+						<EmptySpace height={"24px"}/>
 						<motion.div
 							className={s.imageGrid}
 							variants={containerVariants}
@@ -130,8 +139,16 @@ export const CollectionsContent = (props) => {
 						</motion.div>
 					</> :
 					<>
-						<h1 className={s.type}>{currentStore.tapeTitle}</h1>
-						<EmptySpace/>
+						<motion.div
+							variants={containerVariants}
+							initial="hidden"
+							animate="visible"
+							className={s.collectionHeader}
+						>
+							<h1 className={s.type}>{currentStore.tapeTitle}</h1>
+							<Button icon={<FaTrashCan />} text={"Delete Tape"}/>
+						</motion.div>
+						<EmptySpace height={"24px"}/>
 						<motion.div
 							className={s.videoGrid}
 							variants={containerVariants}
@@ -153,7 +170,7 @@ export const CollectionsContent = (props) => {
 												<div className={s.cellActions}>
 													<div className={s.actionA}>
 														<Link className={s.cellLink} href={`/video/${video.videoId}`}>
-															View Image
+															Visit Video
 														</Link>
 													</div>
 													<div className={s.actionB}>

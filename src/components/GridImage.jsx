@@ -9,6 +9,7 @@ import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import {useEffect, useState} from "react";
 import {Cell} from "@/components/ui/Cell";
 import {EmptySpace} from "@/components/ui/EmptySpace";
+import ImageStore from "@/stores/ImageStore";
 
 export const GridImage = (props) => {
 
@@ -18,11 +19,15 @@ export const GridImage = (props) => {
 
 	const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY
 
+	const {imageFetcher, setImageFetcher} = ImageStore();
+
 	const fetchImages = async () => {
+		setLoading(true);
 		try {
 			const data = await requestMedia(apiKey, `${props.url}&page=${page}`)
 			setImages(data.photos);
 			setPage(page + 1)
+			setImageFetcher(false)
 		} catch (error) {
 			console.error('Error fetching the images:', error);
 		} finally {
@@ -32,7 +37,7 @@ export const GridImage = (props) => {
 
 	useEffect(() => {
 		fetchImages().then(() => null);
-	}, []);
+	}, [imageFetcher]);
 
 	const loadMore = async () => {
 		setPage(page + 1);
@@ -47,11 +52,18 @@ export const GridImage = (props) => {
 	return (
 		<>
 			{
-				loading ? (
+				loading && !imageFetcher ? (
 					<SkeletonAlpha isType={props.isType}/>
 				) : (
 					<>
-						{props.isType ? <><span className={s.type}>IMAGES</span><EmptySpace height={"24px"}/></> : <></>}
+						{
+							props.isType ?
+								<>
+									<span className={s.type}>IMAGES</span>
+									<EmptySpace height={"24px"}/>
+								</>
+								: <></>
+						}
 						<motion.div
 							className={s.imageGrid}
 							variants={containerVariants}

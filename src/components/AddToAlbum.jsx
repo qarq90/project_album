@@ -148,8 +148,13 @@ export const AddToAlbum = (props) => {
 				}
 			}
 		}
-		fetchAlbums().then(() => null)
-		setLoading(false)
+		fetchAlbums().then(() => null);
+
+		const timer = setTimeout(() => {
+			setLoading(false);
+		}, 1750);
+
+		return () => clearTimeout(timer);
 	}, [albums, setImageFetcher, userId])
 
 	return (
@@ -165,44 +170,51 @@ export const AddToAlbum = (props) => {
 					<Title text="Add To Album"/>
 					<div className={c.albumGrid}>
 						{
-							albums !== null
-								?
+							!loading ? (
+								albums && albums.length > 0 ? (
+									<>
+										<div className={c.album} onClick={openCreateHandler}>
+											Create a new album
+										</div>
+										{
+											albums.map((album, index) => (
+												<div
+													className={c.album}
+													key={album.index}
+													style={{
+														backgroundImage: `url(${albums[index].albumData[0].url})`,
+														backgroundSize: 'cover',
+														backgroundPosition: 'center',
+													}}
+													onClick={() => addToCurrentAlbum(albums[index].albumId, index)}
+												>
+													<p className={c.albumName}>{album.albumTitle}</p>
+												</div>
+											))
+										}
+									</>
+								) : (
+									<>
+										<div className={c.album} onClick={openCreateHandler}>
+											Create a new album
+										</div>
+										<div className={c.album}>
+											You have yet to create albums
+										</div>
+									</>
+								)
+							) : (
 								<>
 									<div className={c.album} onClick={openCreateHandler}>
-										Create a new tape
+									Create a new album
 									</div>
-									{
-										albums.map((album, index) => (
-											<div
-												className={c.album}
-												key={album.index}
-												style={{
-													backgroundImage: `url(${albums[index].albumData[0].url})`,
-													backgroundSize: 'cover',
-													backgroundPosition: 'center',
-												}}
-												onClick={() => addToCurrentAlbum(albums[index].albumId, index)}
-											>
-												<p className={c.albumName}>{album.albumTitle}</p>
-											</div>
-										))
-									}
-								</> :
-								<>
-									<div className={c.album} onClick={openCreateHandler}>
-										Create a new tape
-									</div>
-									{
-										!loading ?
-											<>
-												<SkeletonCharlie/>
-												<SkeletonCharlie/>
-												<SkeletonCharlie/>
-												<SkeletonCharlie/>
-												<SkeletonCharlie/>
-											</> : <></>
-									}
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
+									<SkeletonCharlie/>
 								</>
+							)
 						}
 					</div>
 					<div className={c.btnContainer}>
@@ -210,24 +222,22 @@ export const AddToAlbum = (props) => {
 					</div>
 				</motion.div>
 				{
-					create ?
-						<>
-							<motion.div
-								initial="initial"
-								animate="animate"
-								exit="exit"
-								variants={slideIn}
-								className={c.name}
-							>
-								<Title text="New Album"/>
-								<Input placeholder="Enter album name..." onKeyDown={createHandler}
-								       onChange={(e) => setName(e.target.value)}/>
-								<div className={c.btnContainer}>
-									<Button text="Cancel" onClick={cancelHandler}/>
-									<Button text="Create" onClick={createHandler}/>
-								</div>
-							</motion.div>
-						</> : null
+					create &&
+					<motion.div
+						initial="initial"
+						animate="animate"
+						exit="exit"
+						variants={slideIn}
+						className={c.name}
+					>
+						<Title text="New Album"/>
+						<Input placeholder="Enter album name..." onKeyDown={createHandler}
+						       onChange={(e) => setName(e.target.value)}/>
+						<div className={c.btnContainer}>
+							<Button text="Cancel" onClick={cancelHandler}/>
+							<Button text="Create" onClick={createHandler}/>
+						</div>
+					</motion.div>
 				}
 			</AnimatePresence>
 		</>

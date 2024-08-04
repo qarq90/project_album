@@ -9,6 +9,7 @@ import {useRouter} from "next/navigation";
 import {useFetchUser} from "@/hooks/useFetchUser";
 import {AddToAlbum} from "@/components/AddToAlbum";
 import {SkeletonDelta} from "@/components/SkeletonDelta";
+import {FaDownload, FaPlus} from "react-icons/fa";
 
 export default function Page({params}) {
 
@@ -96,12 +97,12 @@ export default function Page({params}) {
 									);
 								})}
 							</select>
-							<Button text="Download" onClick={downloadHandler}/>
-							<Button text="Add to Album" onClick={albumHandler}/>
+							<Button icon={<FaDownload/>} text="Download" onClick={downloadHandler}/>
+							<Button icon={<FaPlus/>} text="Add to Album" onClick={albumHandler}/>
 						</div>
 					</>
 				) : (
-					<SkeletonDelta />
+					<SkeletonDelta/>
 				)}
 			</div>
 			{openAlbum ? <AddToAlbum image={image} openAlbum={openAlbum} setOpenAlbum={setOpenAlbum}/> : null}

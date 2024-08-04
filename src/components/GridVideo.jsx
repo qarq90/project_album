@@ -9,6 +9,7 @@ import {SkeletonAlpha} from "@/components/SkeletonAlpha";
 import {useEffect, useState} from "react";
 import {Cell} from "@/components/ui/Cell";
 import {EmptySpace} from "@/components/ui/EmptySpace";
+import VideoStore from "@/stores/VideoStore";
 
 export const GridVideo = (props) => {
 
@@ -18,11 +19,15 @@ export const GridVideo = (props) => {
 
 	const apiKey = process.env.NEXT_PUBLIC_PEXELS_API_KEY;
 
+	const {videoFetcher, setVideoFetcher} = VideoStore();
+
 	const fetchVideos = async () => {
+		setLoading(true);
 		try {
 			const data = await requestMedia(apiKey, `${props.url}&page=${page}`)
 			setVideos(data.videos);
 			setPage(page + 1)
+			setVideoFetcher(false)
 		} catch (error) {
 			console.error('Error fetching the videos:', error);
 		} finally {
@@ -32,7 +37,7 @@ export const GridVideo = (props) => {
 
 	useEffect(() => {
 		fetchVideos().then(() => null);
-	}, []);
+	}, [videoFetcher]);
 
 	const loadMore = async () => {
 		setPage(page + 1);
@@ -47,11 +52,18 @@ export const GridVideo = (props) => {
 	return (
 		<>
 			{
-				loading ? (
+				loading && !videoFetcher ? (
 					<SkeletonAlpha isType={props.isType}/>
 				) : (
 					<>
-						{props.isType ? <><span className={s.type}>VIDEOS</span><EmptySpace height={"24px"}/></> : <></>}
+						{
+							props.isType ?
+								<>
+									<span className={s.type}>VIDEOS</span>
+									<EmptySpace height={"24px"}/>
+								</> :
+								<></>
+						}
 						<motion.div
 							className={s.videoGrid}
 							variants={containerVariants}

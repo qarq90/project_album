@@ -9,21 +9,17 @@ import UserStore from "@/stores/UserStore";
 import {removeNameFromURL} from "@/lib/helperFunctions";
 import VideoStore from "@/stores/VideoStore";
 import {SkeletonCharlie} from "@/components/SkeletonCharlie";
+import c from "@/styles/components/collections.module.css";
 
 export const AddToTape = (props) => {
 
 	const [create, setCreate] = useState(false);
 	const [name, setName] = useState("");
 	const [tapes, setTapes] = useState(null);
-	const [loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(true);
 
-	const {
-		userId
-	} = UserStore();
-
-	const {
-		setVideoFetcher
-	} = VideoStore();
+	const {userId} = UserStore();
+	const {setVideoFetcher} = VideoStore();
 
 	function closeHandler() {
 		props.setOpenTape(false);
@@ -78,7 +74,7 @@ export const AddToTape = (props) => {
 			const data = await response.json();
 
 			if (data.status) {
-				setVideoFetcher(true)
+				setVideoFetcher(true);
 				props.setOpenTape(false);
 			} else {
 				alert(data.message);
@@ -116,7 +112,7 @@ export const AddToTape = (props) => {
 			const data = await res.json();
 
 			if (data.status) {
-				setVideoFetcher(true)
+				setVideoFetcher(true);
 				props.setOpenTape(false);
 			} else {
 				alert('Failed to add video to tape');
@@ -128,24 +124,20 @@ export const AddToTape = (props) => {
 
 	useEffect(() => {
 		const fetchTapes = async () => {
-			const request = {
-				userId: userId,
-			};
+			const request = {userId: userId};
 
 			if (tapes === null) {
 				try {
 					const response = await fetch('/api/post/collections/tapes/fetch', {
 						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
+						headers: {'Content-Type': 'application/json'},
 						body: JSON.stringify(request),
 					});
 
 					const data = await response.json();
 
 					if (data.status) {
-						setVideoFetcher(false)
+						setVideoFetcher(false);
 						setTapes(data.result.tapes);
 					}
 				} catch (e) {
@@ -153,7 +145,13 @@ export const AddToTape = (props) => {
 				}
 			}
 		};
-		fetchTapes().then(() => setLoading(true));
+		fetchTapes();
+
+		const timer = setTimeout(() => {
+			setLoading(false);
+		}, 1750);
+
+		return () => clearTimeout(timer);
 	}, [setVideoFetcher, tapes, userId]);
 
 	return (
@@ -169,39 +167,40 @@ export const AddToTape = (props) => {
 					<Title text="Add To Tape"/>
 					<div className={a.albumGrid}>
 						{
-							loading ?
-								<>
-									{
-										tapes !== null ? (
-											<>
-												<div className={a.album} onClick={openCreateHandler}>
-													Create a new tape
+							!loading ? (
+								tapes && tapes.length > 0 ? (
+									<>
+										<div className={a.album} onClick={openCreateHandler}>
+											Create a new tape
+										</div>
+										{
+											tapes.map((tape, index) => (
+												<div
+													className={a.album}
+													key={tape.index}
+													style={{
+														backgroundImage: `url(${tape.tapeData[0].url})`,
+														backgroundSize: 'cover',
+														backgroundPosition: 'center',
+													}}
+													onClick={() => addToCurrentTape(tapes[index].tapeId, index)}
+												>
+													<p className={a.albumName}>{tape.tapeTitle}</p>
 												</div>
-												{
-													tapes.map((tape, index) => (
-														<div
-															className={a.album}
-															key={tape.index}
-															style={{
-																backgroundImage: `url(${tape.tapeData[0].url})`,
-																backgroundSize: 'cover',
-																backgroundPosition: 'center',
-															}}
-															onClick={() => addToCurrentTape(tapes[index].tapeId, index)}
-														>
-															<p className={a.albumName}>{tape.tapeTitle}</p>
-														</div>
-													))
-												}
-											</>
-										) : (
-											<>
-												<div className={a.album} onClick={openCreateHandler}>
-													Create a new tape
-												</div>
-											</>
-										)}
-								</> :
+											))
+										}
+									</>
+								) : (
+									<>
+										<div className={c.album} onClick={openCreateHandler}>
+											Create a new tape
+										</div>
+										<div className={c.album}>
+											You have yet to create tapes
+										</div>
+									</>
+								)
+							) : (
 								<>
 									<div className={a.album} onClick={openCreateHandler}>
 										Create a new tape
@@ -212,6 +211,7 @@ export const AddToTape = (props) => {
 									<SkeletonCharlie/>
 									<SkeletonCharlie/>
 								</>
+							)
 						}
 					</div>
 					<div className={a.btnContainer}>
@@ -219,7 +219,7 @@ export const AddToTape = (props) => {
 					</div>
 				</motion.div>
 				{
-					create ? (
+					create && (
 						<motion.div
 							initial="initial"
 							animate="animate"
@@ -234,7 +234,7 @@ export const AddToTape = (props) => {
 								<Button text="Create" onClick={createHandler}/>
 							</div>
 						</motion.div>
-					) : null
+					)
 				}
 			</AnimatePresence>
 		</>

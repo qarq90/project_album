@@ -8,17 +8,20 @@ import {RefreshIcon} from "../../public/icons/RefreshIcon";
 import {motion} from "framer-motion";
 import {itemVariants} from "@/styles/animations/scale";
 import {ClearIcon} from "../../public/icons/ClearIcon";
+import ImageStore from "@/stores/ImageStore";
+import VideoStore from "@/stores/VideoStore";
 
 export const Searchbar = () => {
 
 	const router = useRouter();
 
-	const pathname = usePathname()
-
 	const [search, setSearch] = useState("");
 	const [searchHover, setSearchHover] = useState(false);
 	const [refreshHover, setRefreshHover] = useState(false);
 	const [clearHover, setClearHover] = useState(false);
+
+	const { setImageFetcher } = ImageStore();
+	const { setVideoFetcher } = VideoStore();
 
 	const searchHandler = (e) => {
 		if (e.type === "keydown" && e.key === "Enter") {
@@ -31,7 +34,9 @@ export const Searchbar = () => {
 
 	const refreshHandler = async (e) => {
 		e.preventDefault();
-		console.log(pathname)
+		setImageFetcher(true);
+		setVideoFetcher(true);
+		router.refresh();
 	};
 
 	const clearHandler = (e) => {

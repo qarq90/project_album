@@ -75,7 +75,9 @@
 }
 
 .cellLink {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 16px;
     width: 100%;
     border-radius: 8px;
@@ -90,6 +92,10 @@
         color: var(--primary-dark-color);
         background-color: var(--primary-theme-color);
     }
+}
+
+.cellLink > svg{
+    margin-right: 8px;
 }
 
 .cellActions {
@@ -170,4 +176,14 @@
     font-size: 1.75rem;
     color: var(--box-shadow-color);
     text-shadow: 2px 2px var(--primary-theme-color);
+}
+
+.collectionHeader{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.collectionHeader > button{
+    width: 20%;
 }

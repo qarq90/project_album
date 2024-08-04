@@ -9,6 +9,7 @@ import {useFetchUser} from "@/hooks/useFetchUser";
 import {useRouter} from "next/navigation";
 import {AddToTape} from "@/components/AddToTape";
 import {SkeletonDelta} from "@/components/SkeletonDelta";
+import {FaDownload, FaPlus} from "react-icons/fa";
 
 export default function Page({params}) {
 
@@ -101,12 +102,12 @@ export default function Page({params}) {
 									</option>
 								))}
 							</select>
-							<Button text="Download" onClick={downloadHandler}/>
-							<Button text="Add to Tape" onClick={albumHandler}/>
+							<Button icon={<FaDownload/>} text="Download" onClick={downloadHandler}/>
+							<Button icon={<FaPlus/>} text="Add to Tape" onClick={albumHandler}/>
 						</div>
 					</>
 				) : (
-					<SkeletonDelta />
+					<SkeletonDelta/>
 				)}
 			</div>
 			{openTape ? <AddToTape video={video} openTape={openTape} setOpenTape={setOpenTape}/> : null}

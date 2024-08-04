@@ -1,9 +1,10 @@
 import s from "@/styles/globals.module.css"
 import {itemVariants} from "@/styles/animations/scale"
 import Link from "next/link"
-import {FaDownload} from "react-icons/fa"
+import {FaArrowLeft, FaDownload, FaExternalLinkAlt, FaExternalLinkSquareAlt, FaLink} from "react-icons/fa"
 import {motion} from "framer-motion"
 import {getCellType, handleDownload, removeNameFromURL} from "@/lib/helperFunctions"
+import {FaArrowUpFromBracket, FaTentArrowDownToLine} from "react-icons/fa6";
 
 export const Cell = (props) => {
 
@@ -48,7 +49,7 @@ export const Cell = (props) => {
 							className={s.cellLink}
 							href={mediaType ? `/image/${props.data.id}` : `/video/${props.data.id}`}
 						>
-							{mediaType ? "View Image" : "Visit Video"}
+							<FaExternalLinkAlt /> {mediaType ? " View Image" : " Visit Video"}
 						</Link>
 					</div>
 					<div className={s.actionB}>
